@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Discord Sovereign Luxury Edition</title>
-    <!-- 引入 Tailwind CSS 基底 -->
-    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <!-- 引入稳定高效的国内全加速 Tailwind CSS v3 编译源，彻底解决巨大化 Bug -->
+    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/3.0.23/tailwind.min.js"></script>
     <!-- 引入即构科技 ZEGOCLOUD 官方最新 Web SDK (使用国内高速加速源) -->
     <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/zego-express-engine-webrtc/3.0.0/ZegoExpressWebRTC.js"></script>
-    <!-- 引入前端动态加密 CryptoJS (替换 Cloudflare 节点为国内字节跳动 CDN 加速源) -->
+    <!-- 引入前端动态加密 CryptoJS (国内字节跳动 CDN 加速源) -->
     <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         /* 像素级复刻：Discord 官方最新标准暗黑调色盘 + 地雷粉霓虹微透晶体 */
@@ -73,7 +73,7 @@
         <div class="bg-discord-sidebar p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/20 text-center shadow-2xl shadow-jirai-glow">
             <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔦𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
             <h2 class="text-base font-bold mb-1 text-white">地雷物语 · 跨端全极速大厅</h2>
-            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">China Mainland BGP High-Speed CDN Embedded</p>
+            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">PC Layout Size & TailWind v3 Fixed</p>
             
             <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">您的专属名号 🎀</label>
             <input type="text" id="username-input" maxlength="12" placeholder="请输入昵称..." class="w-full p-2.5 bg-discord-guilds rounded-xl focus:outline-none focus:ring-1 focus:ring-jirai-pink mb-6 text-white border border-neutral-900 text-sm">
@@ -95,26 +95,28 @@
         
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden transition-opacity"></div>
 
-        <!-- 侧边树抽屉 -->
+        <!-- 侧边树抽屉 (严格限制电脑端的宽度，拒绝变大) -->
         <div id="sidebar-wrapper" class="sidebar-drawer fixed lg:static inset-y-0 left-0 flex z-40 transform -translate-x-full lg:translate-x-0 flex-shrink-0">
-            <div class="w-16 bg-discord-guilds flex flex-col items-center py-3 space-y-2 flex-shrink-0 border-r border-black/20">
+            <!-- 极左服务器列表 (锁死原版 Discord 的 72px 宽度) -->
+            <div class="w-[72px] bg-discord-guilds flex flex-col items-center py-3 space-y-2 flex-shrink-0 border-r border-black/20">
                 <div class="server-icon w-12 h-12 bg-discord-sidebar rounded-[24px] flex items-center justify-center cursor-pointer text-jirai-pink font-extrabold text-base shadow">🖤</div>
                 <div class="w-8 h-[2px] bg-neutral-800 rounded"></div>
                 <button id="btn-change-bg" class="server-icon w-12 h-12 bg-discord-input rounded-[24px] flex items-center justify-center cursor-pointer text-base">🔮</button>
             </div>
 
-            <div class="w-52 bg-discord-sidebar flex flex-col justify-between flex-shrink-0 border-r border-black/10">
+            <!-- 中左频道树列表 (锁死原版 Discord 的 240px 宽度) -->
+            <div class="w-60 bg-discord-sidebar flex flex-col justify-between flex-shrink-0 border-r border-black/10">
                 <div class="flex-1 overflow-y-auto custom-scrollbar">
-                    <div class="h-12 border-b border-discord-guilds flex items-center px-4 font-bold text-white tracking-wide shadow-sm truncate">真言联邦界 🩰</div>
+                    <div class="h-12 border-b border-discord-guilds flex items-center px-4 font-bold text-white tracking-wide shadow-sm truncate text-sm">真言联邦界 🩰</div>
                     <div class="p-2 space-y-4">
                         <div>
                             <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">文字板块</div>
                             <div class="space-y-0.5" id="text-channels-container">
-                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-white bg-neutral-700/40 cursor-pointer text-sm font-medium transition" data-type="text" data-channel="chat-lobby">
+                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-white bg-neutral-700/40 cursor-pointer text-xs font-medium transition" data-type="text" data-channel="chat-lobby">
                                     <div class="active-indicator"></div>
                                     <span class="mr-2 text-neutral-500 font-bold ml-2">#</span> <span>日常沉沦大厅</span>
                                 </div>
-                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-sm transition" data-type="text" data-channel="announcements">
+                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="text" data-channel="announcements">
                                     <span class="mr-2 text-neutral-500 font-bold ml-2">#</span> <span>契约置顶榜</span>
                                 </div>
                             </div>
@@ -122,7 +124,7 @@
                         <div>
                             <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">语音连线大厅</div>
                             <div class="space-y-0.5" id="voice-channels-container">
-                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-sm transition" data-type="voice" data-channel="voice-lobby">
+                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="voice-lobby">
                                     <span class="mr-2 ml-2">🔮</span> <span>千重夜话连线厅</span>
                                 </div>
                             </div>
@@ -132,7 +134,7 @@
                 <div class="h-14 bg-discord-userpanel flex items-center justify-between px-2 flex-shrink-0">
                     <div class="flex items-center space-x-1.5 overflow-hidden cursor-pointer group mr-0.5" id="user-profile-trigger">
                         <img id="my-avatar" src="" class="w-8 h-8 rounded-full bg-neutral-800 border border-jirai-pink/20">
-                        <div class="text-xs font-semibold truncate max-w-[80px]">
+                        <div class="text-xs font-semibold truncate max-w-[90px]">
                             <p id="my-name" class="text-white truncate leading-tight"></p>
                             <span id="my-status-text" class="text-neutral-500 text-[9px] block leading-none mt-0.5 truncate">🎀 点击改签...</span>
                         </div>
@@ -150,7 +152,7 @@
             <div class="h-12 border-b border-discord-guilds flex items-center justify-between px-4 font-bold text-white shadow-sm flex-shrink-0 z-10 bg-discord-main/60 backdrop-blur-md">
                 <div class="flex items-center space-x-3">
                     <button id="btn-trigger-sidebar" class="block lg:hidden text-jirai-pink text-xl hover:text-white transition p-1.5 bg-discord-input rounded-xl border border-jirai-pink/10">☰</button>
-                    <div class="flex items-center space-x-2" id="room-title">
+                    <div class="flex items-center space-x-2 text-sm" id="room-title">
                         <span class="text-jirai-pink text-xl">#</span> <span>日常沉沦大厅</span>
                     </div>
                 </div>
@@ -165,44 +167,43 @@
             <div class="flex-1 flex overflow-hidden">
                 <!-- 文字流 -->
                 <div id="panel-chat" class="flex-1 flex flex-col min-w-0 bg-transparent">
-                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-4"></div>
+                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-4 text-xs sm:text-sm"></div>
                     <div id="typing-indicator" class="px-4 h-5 text-xs text-neutral-500 hidden items-center space-x-1">
                         <span id="typing-text" class="font-medium text-jirai-pink"></span> <span class="text-[10px]">正在轻打字...</span>
                         <div class="flex space-x-0.5 items-center pt-0.5"><span class="w-1 h-1 bg-jirai-pink rounded-full dot-blink"></span><span class="w-1 h-1 bg-jirai-pink rounded-full dot-blink"></span><span class="w-1 h-1 bg-jirai-pink rounded-full dot-blink"></span></div>
                     </div>
                     <div class="px-4 pb-6 pt-1 flex-shrink-0">
-                        <div class="bg-discord-input rounded-xl px-4 py-2.5 flex items-center space-x-3 shadow-md border border-jirai-pink/5 focus-within:border-jirai-pink/20 transition-all duration-300">
+                        <div class="bg-discord-input rounded-xl px-4 py-2 flex items-center space-x-3 shadow-md border border-jirai-pink/5 focus-within:border-jirai-pink/20 transition-all duration-300">
                             <button id="btn-trigger-image" class="text-neutral-400 hover:text-jirai-pink transition text-base">➕</button>
-                            <input type="text" id="chat-input" placeholder="诉说心声（回车发送）..." class="flex-1 bg-transparent text-sm focus:outline-none text-neutral-100 placeholder-neutral-500" autocomplete="off">
+                            <input type="text" id="chat-input" placeholder="诉说心声（回车发送）..." class="flex-1 bg-transparent text-xs sm:text-sm focus:outline-none text-neutral-100 placeholder-neutral-500" autocomplete="off">
                         </div>
                     </div>
                 </div>
 
-                <!-- 视频与语音多媒体大厅（完美整合跨端同步白板） -->
-                <div id="panel-voice" class="flex-1 p-3 sm:p-4 flex flex-col hidden bg-black/20 overflow-hidden">
-                    <div class="mb-3 p-2 bg-discord-sidebar border border-jirai-pink/10 rounded-xl flex items-center justify-center space-x-2 sm:space-x-4 flex-shrink-0 shadow-lg">
-                        <button id="btn-toggle-video" class="px-3 py-1.5 bg-discord-input hover:bg-jirai-pink hover:text-black rounded-lg border border-jirai-pink/10 transition flex items-center space-x-1 text-xs"><span>📷</span> <span>视讯镜头</span></button>
-                        <button id="btn-toggle-screen" class="px-3 py-1.5 bg-discord-input hover:bg-jirai-pink hover:text-black rounded-lg border border-jirai-pink/10 transition flex items-center space-x-1 text-xs"><span>🖥️</span> <span id="screen-btn-text">共享屏幕</span></button>
-                        <!-- 🚨 方案2：核心高拟真跨端同步白板按键 -->
-                        <button id="btn-toggle-board" class="px-3 py-1.5 bg-discord-input hover:bg-jirai-pink hover:text-black rounded-lg border border-jirai-pink/10 border-dashed transition flex items-center space-x-1 text-xs text-jirai-pink"><span>🎨</span> <span>共享白板</span></button>
+                <!-- 视频与语音多媒体大厅（画面完美适配，支持全屏放大） -->
+                <div id="panel-voice" class="flex-1 p-3 flex flex-col hidden bg-black/20 overflow-hidden">
+                    <div class="mb-3 p-1.5 bg-discord-sidebar border border-jirai-pink/10 rounded-xl flex items-center justify-center space-x-2 sm:space-x-4 flex-shrink-0 shadow-lg">
+                        <button id="btn-toggle-video" class="px-3 py-1 bg-discord-input hover:bg-jirai-pink hover:text-black rounded-lg border border-jirai-pink/10 transition flex items-center space-x-1 text-xs"><span>📷</span> <span>视讯镜头</span></button>
+                        <button id="btn-toggle-screen" class="px-3 py-1 bg-discord-input hover:bg-jirai-pink hover:text-black rounded-lg border border-jirai-pink/10 transition flex items-center space-x-1 text-xs"><span>🖥️</span> <span id="screen-btn-text">共享屏幕</span></button>
+                        <button id="btn-toggle-board" class="px-3 py-1 bg-discord-input hover:bg-jirai-pink hover:text-black rounded-lg border border-jirai-pink/10 border-dashed transition flex items-center space-x-1 text-xs text-jirai-pink"><span>🎨</span> <span>共享白板</span></button>
                     </div>
                     
                     <div class="flex-1 flex flex-col md:flex-row gap-3 overflow-hidden">
-                        <!-- 视频九宫格网格 -->
+                        <!-- 视频网格 -->
                         <div id="voice-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto custom-scrollbar"></div>
                         
-                        <!-- 🚨 方案2：同步虚拟白板画壁（手机、平板、PC跨端完美互通区） -->
+                        <!-- 跨端同步画壁 -->
                         <div id="whiteboard-area" class="w-full md:w-1/2 h-64 md:h-full bg-jirai-dark border border-jirai-pink/20 rounded-xl flex-col overflow-hidden hidden">
-                            <div class="p-2 bg-jirai-blacker border-b border-jirai-pink/10 flex items-center justify-between text-xs text-neutral-400">
+                            <div class="p-2 bg-jirai-blacker border-b border-jirai-pink/10 flex items-center justify-between text-[11px] text-neutral-400">
                                 <span class="text-jirai-pink font-bold">🎨 跨端同步画壁 (Whiteboard Room)</span>
-                                <button id="btn-clear-board" class="px-2 py-0.5 bg-discord-input hover:bg-red-900 text-white rounded">清空画板</button>
+                                <button id="btn-clear-board" class="px-2 py-0.5 bg-discord-input hover:bg-red-900 text-white rounded text-[10px]">清空画板</button>
                             </div>
                             <canvas id="whiteboard-canvas" class="flex-1 w-full h-full"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- 右侧在线树列 -->
+                <!-- 右侧在线树列 (锁死原版 208px 宽度) -->
                 <div class="w-52 bg-discord-sidebar flex flex-col border-l border-black/20 hidden lg:flex flex-shrink-0">
                     <div class="p-3 text-[11px] font-bold text-neutral-400 uppercase tracking-wider border-b border-discord-guilds">大厅缔约者 — <span id="member-count" class="text-jirai-pink">1</span></div>
                     <div id="member-list" class="flex-1 overflow-y-auto custom-scrollbar px-2 pt-2 space-y-0.5"></div>
@@ -229,7 +230,6 @@
         let currentCameraFacing = "user"; 
         let typingTimeout = null;
 
-        // 白板绘图引擎底层所需状态
         const canvas = document.getElementById('whiteboard-canvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
@@ -292,7 +292,7 @@
             if (isMobileDevice) {
                 document.getElementById('screen-btn-text').innerText = "翻转镜头";
             }
-            initCanvasResize(); // 准备好画布规格比例
+            initCanvasResize(); 
         });
 
         function generateZegoRoomToken(roomID, userID) {
@@ -357,8 +357,6 @@
                         if(data.type === "REACTION" && data.channelId === activeTextChannel) executeLocalReactionAppend(data.targetMsgId, data.emoji);
                         if(data.type === "PIN_MSG" && data.channelId === activeTextChannel) { document.getElementById('pinned-text').innerText = data.content; document.getElementById('pinned-banner').classList.remove('hidden'); }
                         if(data.type === "DELETE_MSG" && data.channelId === activeTextChannel) { const el = document.getElementById(data.targetMsgId); if(el) el.remove(); }
-                        
-                        // 🚨 方案2核心：截获他人发来的全服白板同步绘图轨迹线坐标并复刻
                         if(data.type === "DRAW_PATH" && isBoardOpen) {
                             drawLocalLine(data.x1 * canvas.width, data.y1 * canvas.height, data.x2 * canvas.width, data.y2 * canvas.height, false);
                         }
@@ -410,24 +408,24 @@
             const timeStr = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const row = document.createElement('div');
             row.id = msg.msgId || ("local_" + Date.now());
-            row.className = "flex items-start space-x-3 text-sm px-4 py-1.5 chat-row mx-[-16px] relative rounded-xl transition";
+            row.className = "flex items-start space-x-3 text-xs sm:text-sm px-4 py-1 chat-row mx-[-16px] relative rounded-xl transition";
             
             let contentHTML = isImage 
-                ? `<img src="${msg.content}" class="mt-2 max-w-xs max-h-48 rounded-xl border border-neutral-900 object-cover cursor-zoom-in" onclick="window.open('${msg.content}')">`
+                ? `<img src="${msg.content}" class="mt-1.5 max-w-xs max-h-40 rounded-xl border border-neutral-900 object-cover cursor-zoom-in" onclick="window.open('${msg.content}')">`
                 : `<p class="text-neutral-200 select-text leading-relaxed break-all">${escapeHTML(msg.content)}</p>`;
 
             row.innerHTML = `
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${msg.senderAvatar}" class="w-9 h-9 rounded-full bg-discord-guilds flex-shrink-0 mt-0.5 border border-neutral-800">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${msg.senderAvatar}" class="w-8 h-8 rounded-full bg-discord-guilds flex-shrink-0 mt-0.5 border border-neutral-800">
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-baseline space-x-2"><span class="font-semibold text-white hover:underline cursor-pointer">${escapeHTML(msg.senderName)}</span><span class="text-[10px] text-neutral-500">${timeStr}</span></div>
+                    <div class="flex items-baseline space-x-2"><span class="font-semibold text-white hover:underline cursor-pointer">${escapeHTML(msg.senderName)}</span><span class="text-[9px] text-neutral-500">${timeStr}</span></div>
                     ${contentHTML}
-                    <div class="reaction-box flex items-center space-x-1 mt-1.5 flex-wrap gap-1"></div>
+                    <div class="reaction-box flex items-center space-x-1 mt-1 flex-wrap gap-1"></div>
                 </div>
-                <div class="msg-actions absolute right-4 top-2 bg-discord-guilds border border-jirai-pink/10 rounded-lg flex text-xs overflow-hidden z-10 shadow-lg">
-                    <button class="px-2 py-1 hover:bg-jirai-pink hover:text-black text-neutral-400 font-bold" onclick="sendReaction('${row.id}', '🖤')">🖤</button>
-                    <button class="px-2 py-1 hover:bg-jirai-pink hover:text-black text-neutral-400 font-bold" onclick="sendReaction('${row.id}', '🎀')">🎀</button>
-                    <button class="px-2 py-1 hover:bg-jirai-pink hover:text-black text-neutral-400" onclick="pinThisMessage('${row.id}')">📌</button>
-                    ${msg.senderUid === myInfo.uid ? `<button class="px-2 py-1 hover:bg-red-600 hover:text-white text-neutral-400" onclick="deleteMyMessage('${row.id}')">🗑️</button>` : ''}
+                <div class="msg-actions absolute right-4 top-1 bg-discord-guilds border border-jirai-pink/10 rounded-lg flex text-[10px] overflow-hidden z-10 shadow-lg">
+                    <button class="px-1.5 py-0.5 hover:bg-jirai-pink hover:text-black text-neutral-400 font-bold" onclick="sendReaction('${row.id}', '🖤')">🖤</button>
+                    <button class="px-1.5 py-0.5 hover:bg-jirai-pink hover:text-black text-neutral-400 font-bold" onclick="sendReaction('${row.id}', '🎀')">🎀</button>
+                    <button class="px-1.5 py-0.5 hover:bg-jirai-pink hover:text-black text-neutral-400" onclick="pinThisMessage('${row.id}')">📌</button>
+                    ${msg.senderUid === myInfo.uid ? `<button class="px-1.5 py-0.5 hover:bg-red-600 hover:text-white text-neutral-400" onclick="deleteMyMessage('${row.id}')">🗑️</button>` : ''}
                 </div>
             `;
             container.appendChild(row); container.scrollTop = container.scrollHeight;
@@ -448,7 +446,7 @@
                 let countEl = existingPill.querySelector('.count'); countEl.innerText = parseInt(countEl.innerText) + 1;
             } else {
                 const pill = document.createElement('div'); pill.dataset.emoji = emoji;
-                pill.className = "bg-discord-input border border-jirai-pink/10 rounded px-1.5 py-0.5 text-[10px] text-jirai-pink flex items-center space-x-1 font-bold";
+                pill.className = "bg-discord-input border border-jirai-pink/10 rounded px-1.5 py-0.5 text-[9px] text-jirai-pink flex items-center space-x-1 font-bold";
                 pill.innerHTML = `<span>${emoji}</span><span class="count">1</span>`;
                 box.appendChild(pill);
             }
@@ -484,7 +482,7 @@
             document.getElementById('chat-messages').innerHTML = ""; document.getElementById('pinned-banner').classList.add('hidden');
             
             const itemEl = document.querySelector(`[data-channel="${channelId}"]`);
-            document.getElementById('room-title').innerHTML = `<span class="text-neutral-500 text-xl mr-1">#</span> <span>${itemEl ? itemEl.innerText.substring(1).trim() : channelId}</span>`;
+            document.getElementById('room-title').innerHTML = `<span class="text-neutral-500 mr-1">#</span> <span>${itemEl ? itemEl.innerText.substring(1).trim() : channelId}</span>`;
             document.getElementById('panel-chat').classList.remove('hidden'); document.getElementById('panel-voice').classList.add('hidden');
 
             document.querySelectorAll('.active-indicator').forEach(el => el.remove());
@@ -506,7 +504,7 @@
 
             myInfo.activeRoomId = channelId;
             const itemEl = document.querySelector(`[data-channel="${channelId}"]`);
-            document.getElementById('room-title').innerHTML = `<span class="mr-2">🔮</span> <span>${itemEl ? itemEl.innerText.substring(1).trim() : channelId}</span>`;
+            document.getElementById('room-title').innerHTML = `<span class="mr-1.5">🔮</span> <span>${itemEl ? itemEl.innerText.substring(1).trim() : channelId}</span>`;
             
             document.getElementById('panel-chat').classList.add('hidden'); document.getElementById('panel-voice').classList.remove('hidden');
             document.getElementById('voice-status-pill').classList.remove('hidden'); document.getElementById('btn-disconnect-voice').classList.remove('hidden');
@@ -525,7 +523,7 @@
         async function leaveCurrentVoiceChannel() {
             if(isCameraOn) await toggleCameraStream();
             if(isScreenSharing) await toggleScreenStream();
-            if(isBoardOpen) toggleWhiteboardLayer(); // 退出时如果画板开着就顺便闭合
+            if(isBoardOpen) toggleWhiteboardLayer(); 
             if(localStreamInstance) { zgEngine.stopPublishingStream("stream_" + myInfo.uid); zgEngine.destroyStream(localStreamInstance); localStreamInstance = null; }
             if(myInfo.activeRoomId && isEngineReady) { await zgEngine.logoutRoom(myInfo.activeRoomId); }
             
@@ -581,14 +579,12 @@
             }
         }
 
-        // 🚨 方案2：核心白板多端同步控制函数
         function toggleWhiteboardLayer() {
             const area = document.getElementById('whiteboard-area');
             isBoardOpen = !isBoardOpen;
             if(isBoardOpen) {
                 area.classList.remove('hidden'); area.classList.add('flex');
                 document.getElementById('btn-toggle-board').classList.add('bg-pink-500', 'text-black');
-                // 确保尺寸比例刷新正确
                 canvas.width = canvas.parentElement.clientWidth;
                 canvas.height = canvas.parentElement.clientHeight - 40;
                 setupCanvasStyle();
@@ -599,9 +595,8 @@
         }
         document.getElementById('btn-toggle-board').addEventListener('click', toggleWhiteboardLayer);
 
-        // --- 9. 🩰 像素同步电子白板手势与指令传输底层 ---
         function setupCanvasStyle() {
-            ctx.strokeStyle = '#ff85a2'; // 地雷粉主色画笔
+            ctx.strokeStyle = '#ff85a2'; 
             ctx.lineJoin = 'round';
             ctx.lineCap = 'round';
             ctx.lineWidth = 3;
@@ -613,7 +608,6 @@
             ctx.lineTo(x2, y2);
             ctx.stroke();
 
-            // 如果是自己画的，将相对坐标（0~1比例）向全房间信道广播，防止屏幕分辨率大小不同产生位移错位
             if(emitBroadcast && isEngineReady && myInfo.activeRoomId) {
                 const drawCmd = {
                     type: "DRAW_PATH",
@@ -627,7 +621,6 @@
             }
         }
 
-        // 鼠标和触屏触摸事件拦截
         canvas.addEventListener('mousedown', (e) => { isDrawing = true; [lastX, lastY] = [e.offsetX, e.offsetY]; });
         canvas.addEventListener('mousemove', (e) => {
             if (!isDrawing) return;
@@ -636,7 +629,6 @@
         });
         window.addEventListener('mouseup', () => isDrawing = false);
 
-        // 移动端/iPad 触控板多点触控拦截支持
         canvas.addEventListener('touchstart', (e) => {
             isDrawing = true;
             const rect = canvas.getBoundingClientRect();
@@ -692,8 +684,8 @@
 
         function appendMemberItem(name, avatarSeed, status, isMe) {
             const listContainer = document.getElementById('member-list');
-            const item = document.createElement('div'); item.className = "flex flex-col p-1.5 hover:bg-neutral-700/30 rounded-xl cursor-pointer transition";
-            item.innerHTML = `<div class="flex items-center space-x-2"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=${avatarSeed}" class="w-6 h-6 rounded-full bg-jirai-blacker"><span class="text-xs text-neutral-300 font-medium truncate flex-1">${escapeHTML(name)} ${isMe ? '<span class="text-jirai-pink font-bold text-[9px]">[我]</span>':''}</span></div><div class="text-[9px] text-neutral-500 pl-8 truncate">${escapeHTML(status)}</div>`;
+            const item = document.createElement('div'); item.className = "flex flex-col p-1 hover:bg-neutral-700/30 rounded-xl cursor-pointer transition";
+            item.innerHTML = `<div class="flex items-center space-x-2"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=${avatarSeed}" class="w-5 h-5 rounded-full bg-jirai-blacker"><span class="text-xs text-neutral-300 font-medium truncate flex-1">${escapeHTML(name)} ${isMe ? '<span class="text-jirai-pink font-bold text-[9px]">[我]</span>':''}</span></div><div class="text-[9px] text-neutral-500 pl-7 truncate">${escapeHTML(status)}</div>`;
             listContainer.appendChild(item);
         }
 
@@ -728,7 +720,7 @@
 
             card.innerHTML = `
                 <div id="${videoSlotId}" class="video-view-container absolute inset-0 w-full h-full flex items-center justify-center bg-black/40">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${avatarSeed}" class="w-12 h-12 rounded-full bg-jirai-blacker border border-neutral-800">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${avatarSeed}" class="w-10 h-10 rounded-full bg-jirai-blacker border border-neutral-800">
                 </div>
                 <div class="absolute bottom-2 left-2 text-[10px] font-medium text-white px-2 py-0.5 bg-black/60 rounded-lg backdrop-blur-sm z-10 truncate max-w-[70%]">${escapeHTML(name)}</div>
                 ${muteBadgeHTML}
@@ -771,18 +763,15 @@
                 const target = currentBtn.dataset.channel;
 
                 document.querySelectorAll('.channel-item').forEach(i => {
-                    i.className = "channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-sm transition";
+                    i.className = "channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition";
                 });
-                currentBtn.className = "channel-item relative flex items-center px-2 py-1.5 rounded-md text-white bg-neutral-700/40 cursor-pointer text-sm font-medium transition";
+                currentBtn.className = "channel-item relative flex items-center px-2 py-1.5 rounded-md text-white bg-neutral-700/40 cursor-pointer text-xs font-medium transition";
                 
                 if (type === 'text') switchTextChannel(target); 
                 else if (type === 'voice') switchVoiceChannel(target);
             });
         });
 
-        setInterval(() => { if(myInfo.name && isEngineReady && myInfo.activeRoomId) {
-            zgEngine.sendCustomCommand(myInfo.activeRoomId, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: myInfo.activeRoomId, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
-        }}, 5000);
         function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
     </script>
 </body>
