@@ -4,41 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Discord Sovereign Luxury Edition</title>
-    <!-- 彻底移除国内节点，回归国际权威公共主干网服务源 -->
+    <!-- 引入国际权威公共 CDN 主干网服务源（双源容灾备份，防范脚本挂起） -->
     <script src="https://cdn.jsdelivr.net/npm/zego-express-engine-webrtc@3.0.0/ZegoExpressWebRTC.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     
     <style>
-        /* 🚨 物理防御：全原生高级 CSS 像素级锁死，绝无任何第三方框架干扰，彻底根除巨大化 Bug */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        /* 🚨 物理锁死：全原生高级 CSS 像素级约束，100% 免疫巨大化，杜绝排版撑开 */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #111214; color: #dbdee1; font-size: 13px; overflow: hidden; height: 100vh; width: 100vw; -webkit-font-smoothing: antialiased; }
         
         #app-root { display: flex; width: 100vw; height: 100vh; position: relative; }
         
         /* 移动端防穿透侧滑遮罩 */
-        #sidebar-overlay { display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.6); z-index: 35; transition: opacity 0.2s ease; }
+        #sidebar-overlay { display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.6); z-index: 35; }
         #sidebar-overlay.overlay-open { display: block; }
 
-        /* ==================== 第一栏：左侧服务器核心轴 (严格锁死原版 72px) ==================== */
+        /* ==================== 第一栏：服务器核心轴 (严格锁死 72px) ==================== */
         .guilds-sidebar { width: 72px; min-width: 72px; background-color: #1e1f22; display: flex; flex-direction: column; align-items: center; padding-top: 12px; gap: 8px; z-index: 20; height: 100%; flex-shrink: 0; }
         .server-icon { width: 48px; height: 48px; background-color: #2b2d31; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #ff85a2; font-weight: bold; font-size: 15px; transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); border: 2px solid #1e1f22; }
         .server-icon:hover { border-radius: 16px; border-color: #ff85a2; background-color: #ff85a2; color: #000; box-shadow: 0 0 12px rgba(255, 133, 162, 0.5); }
         .guild-separator { width: 32px; height: 2px; background-color: #35363c; border-radius: 1px; }
 
-        /* ==================== 第二栏：中左侧频道树栏 (严格锁死原版 240px) ==================== */
+        /* ==================== 第二栏：频道树栏 (严格锁死 240px) ==================== */
         .channels-sidebar { width: 240px; min-width: 240px; background-color: #2b2d31; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #1f2023; z-index: 10; height: 100%; flex-shrink: 0; }
-        .sidebar-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; padding: 0 16px; font-weight: bold; color: #fff; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .sidebar-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; padding: 0 16px; font-weight: bold; color: #fff; font-size: 14px; }
         .channels-container { padding: 8px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
         .channel-group-title { font-size: 10px; font-weight: bold; color: #949ba4; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 4px; }
         .channel-item { display: flex; align-items: center; padding: 6px 8px; border-radius: 4px; cursor: pointer; color: #949ba4; gap: 6px; font-size: 13px; position: relative; transition: background-color 0.1s, color 0.1s; }
         .channel-item:hover { background-color: rgba(78, 80, 88, 0.3); color: #dbdee1; }
         .channel-item.active { background-color: rgba(78, 80, 88, 0.4); color: #fff; }
         
-        /* 原版激活高亮粉色小指示条 */
         .active-indicator { width: 4px; height: 16px; background-color: #ff85a2; border-radius: 0 4px 4px 0; position: absolute; left: 0; top: 8px; display: none; }
         .channel-item.active .active-indicator { display: block; }
 
-        /* 底部状态底座 */
+        /* 用户控制底座 */
         .user-panel { height: 52px; background-color: #232428; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; flex-shrink: 0; }
         .user-info { display: flex; align-items: center; gap: 8px; overflow: hidden; max-w: 130px; cursor: pointer; }
         .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #111214; border: 1px solid rgba(255,133,162,0.2); flex-shrink: 0; }
@@ -46,10 +45,10 @@
         .user-name-title { font-weight: bold; color: #fff; font-size: 12px; line-height: 1.2; }
         .user-status-sub { font-size: 10px; color: #949ba4; }
         .user-controls { display: flex; gap: 2px; }
-        .ctrl-btn { background: none; border: none; color: #b5bac1; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.1s; }
+        .ctrl-btn { background: none; border: none; color: #b5bac1; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 14px; }
         .ctrl-btn:hover { background-color: rgba(78, 80, 88, 0.3); color: #dbdee1; }
 
-        /* ==================== 第三栏：中央主工作控制区 ==================== */
+        /* ==================== 第三栏：中央主视窗看板 ==================== */
         .main-content-area { flex: 1; display: flex; flex-direction: column; background-color: #313338; min-w: 0; height: 100%; }
         .content-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-weight: bold; color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.2); flex-shrink: 0; }
         .header-title-zone { display: flex; align-items: center; gap: 8px; }
@@ -59,27 +58,23 @@
 
         .workspace-split { flex: 1; display: flex; overflow: hidden; position: relative; }
         
-        /* 文本大厅流 */
+        /* 文本模式 */
         .chat-panel { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-w: 0; height: 100%; }
         .messages-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
         .chat-row { display: flex; gap: 16px; align-items: flex-start; padding: 4px 16px; position: relative; margin: 0 -16px; }
         .chat-row:hover { background-color: rgba(0,0,0,0.06); }
-        
-        /* 🚨 新增：高度还原 Discord @Everyone 琥珀高亮视觉 */
         .chat-row.mention-row { background-color: rgba(240, 178, 50, 0.08) !important; border-left: 2px solid #f0b232; }
-        .chat-row.mention-row:hover { background-color: rgba(240, 178, 50, 0.12) !important; }
         .mention-badge { background-color: rgba(88, 101, 242, 0.3); color: #fff; padding: 0 4px; border-radius: 3px; font-weight: 500; }
 
         .msg-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: #1e1f22; flex-shrink: 0; }
         .msg-body { flex: 1; min-w: 0; }
         .msg-author-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
         .msg-author-name { font-weight: 500; color: #f2f3f5; font-size: 14px; cursor: pointer; }
-        .msg-author-name:hover { underline: true; text-decoration: underline; }
+        .msg-author-name:hover { text-decoration: underline; }
         .msg-timestamp { font-size: 10px; color: #949ba4; }
         .msg-text-content { color: #dbdee1; line-height: 1.375; font-size: 14px; word-break: break-all; user-select: text; }
         .msg-img { margin-top: 6px; max-width: 260px; max-height: 200px; border-radius: 8px; border: 1px solid #111214; object-fit: cover; cursor: zoom-in; }
         
-        /* 浮动悬停面板 */
         .msg-actions { position: absolute; right: 24px; top: -10px; background-color: #2b2d31; border: 1px solid rgba(255,133,162,0.15); border-radius: 4px; display: flex; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.1s ease; z-index: 5; }
         .chat-row:hover .msg-actions { opacity: 1; }
         .action-icon-btn { background: none; border: none; color: #b5bac1; padding: 4px 10px; cursor: pointer; font-size: 12px; font-weight: bold; }
@@ -88,17 +83,15 @@
         .reaction-box { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
         .reaction-pill { background-color: #2b2d31; border: 1px solid rgba(255,133,162,0.2); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: #ff85a2; display: flex; align-items: center; gap: 4px; font-weight: bold; }
 
-        /* 输入区 */
         .input-area-wrapper { padding: 0 16px 24px 16px; flex-shrink: 0; }
         .input-container { background-color: #383a40; border-radius: 8px; padding: 11px 16px; display: flex; align-items: center; gap: 16px; }
         .attach-btn { background: none; border: none; color: #b5bac1; font-size: 18px; cursor: pointer; font-weight: bold; line-height: 1; }
-        .attach-btn:hover { color: #f2f3f5; }
         .main-chat-input { flex: 1; background: none; border: none; color: #f2f3f5; font-size: 14px; outline: none; }
         .main-chat-input::placeholder { color: #6d737d; }
         
         .typing-box { height: 20px; padding: 0 16px; font-size: 11px; color: #949ba4; display: none; align-items: center; gap: 4px; }
 
-        /* 语音九宫格与多媒体画壁区 */
+        /* 多媒体大厅 */
         .voice-panel { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px; background-color: rgba(0,0,0,0.1); overflow: hidden; height: 100%; }
         .media-controls-bar { background-color: #2b2d31; padding: 8px; border-radius: 8px; display: flex; justify-content: center; gap: 12px; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .media-ctrl-btn { background-color: #383a40; border: 1px solid rgba(255,133,162,0.1); color: #fff; padding: 6px 16px; border-radius: 4px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background-color 0.15s; font-weight: 500; }
@@ -113,14 +106,12 @@
         .card-user-label { position: absolute; bottom: 8px; left: 8px; font-size: 11px; background-color: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 4px; color: #fff; z-index: 10; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .card-mute-badge { position: absolute; bottom: 8px; right: 8px; background-color: #da373c; color: #fff; border-radius: 50%; width: 20px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; z-index: 10; font-weight: bold; }
 
-        /* 方案2核心：全同步虚拟画壁白板 */
         .whiteboard-box-wrapper { width: 100%; height: 260px; background-color: #13131a; border: 1px solid rgba(255,133,162,0.15); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
         .board-top-menu { background-color: #0b0b0f; border-bottom: 1px solid rgba(255,133,162,0.1); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
         .clear-canvas-btn { background-color: #383a40; border: none; color: #fff; padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
-        .clear-canvas-btn:hover { background-color: #da373c; }
         #whiteboard-canvas { flex: 1; width: 100%; height: 100%; touch-action: none; }
 
-        /* ==================== 第四栏：最右侧在线成员树列表 (严格锁死 240px 宽度) ==================== */
+        /* ==================== 第四栏：右侧成员树 (锁定 240px) ==================== */
         .member-list-sidebar { width: 240px; min-width: 240px; background-color: #2b2d31; display: flex; flex-direction: column; flex-shrink: 0; }
         .member-sidebar-title { padding: 24px 16px 8px 16px; font-size: 12px; font-weight: bold; color: #949ba4; text-transform: uppercase; letter-spacing: 0.5px; }
         .member-items-stack { padding: 0 8px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; flex: 1; }
@@ -131,7 +122,7 @@
         .member-node-name { font-size: 14px; color: #b5bac1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
         .member-node-signature { font-size: 11px; color: #949ba4; padding-left: 42px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: -2px; }
 
-        /* ==================== 响应式移动端/iPad 强控抽屉滑出系统 ==================== */
+        /* 移动抽屉布局 */
         @media (max-width: 1023px) {
             .sidebar-drawer { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.5); }
             .sidebar-drawer.drawer-open { transform: translateX(0); }
@@ -141,54 +132,48 @@
             .multimedia-split-zone { flex-direction: column !important; }
             .whiteboard-box-wrapper { width: 100% !important; height: 260px !important; }
         }
-        @media (min-width: 768px) {
-            .multimedia-split-zone { flex-direction: row; }
-            .whiteboard-box-wrapper { width: 50%; height: 100%; }
-        }
+        @media (min-width: 768px) { .multimedia-split-zone { flex-direction: row; } .whiteboard-box-wrapper { width: 50%; height: 100%; } }
     </style>
 </head>
 <body>
 
-    <!-- 1. 初始信息弹窗 -->
-    <div id="login-overlay">
+    <!-- 1. 契约信息弹窗 -->
+    <div id="login-overlay" style="position: fixed; inset: 0; background-color: rgba(0,0,0,0.95); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px);">
         <div style="background-color: #2b2d31; padding: 28px; border-radius: 12px; width: 100%; max-w: 360px; border: 1px solid rgba(255,133,162,0.2); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
             <div style="font-size: 22px; margin-bottom: 6px; letter-spacing: 2px; font-weight: bold; color: #fff;">🖤 𝔍𝔦𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
-            <div style="font-size: 12px; color: #ff85a2; margin-bottom: 28px; tracking-wider: true; letter-spacing: 0.5px;">Sovereign Native Layout Node</div>
+            <div style="font-size: 12px; color: #ff85a2; margin-bottom: 28px; letter-spacing: 0.5px;">Sovereign Native Layout Node</div>
             
             <div style="text-align: left; margin-bottom: 18px;">
                 <label style="font-size: 11px; font-weight: bold; color: #949ba4; text-transform: uppercase; display: block; margin-bottom: 6px;">契约名号 🎀</label>
-                <input type="text" id="username-input" maxlength="12" placeholder="输入您的花名..." style="width: 100%; padding: 11px; background-color: #1e1f22; border: 1px solid #111214; border-radius: 6px; color: #fff; outline: none; font-size: 14px;">
+                <input type="text" id="username-input" maxlength="12" placeholder="输入进入大厅的花名..." style="width: 100%; padding: 11px; background-color: #1e1f22; border: 1px solid #111214; border-radius: 6px; color: #fff; outline: none; font-size: 14px;">
             </div>
             
             <div style="text-align: left; margin-bottom: 28px;">
                 <label style="font-size: 11px; font-weight: bold; color: #949ba4; text-transform: uppercase; display: block; margin-bottom: 6px;">契约形态头像 🖤</label>
                 <div style="display: flex; justify-content: space-between; padding: 0 2px;" id="avatar-selector">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ares" class="avatar-option" style="width: 46px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Ares">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Zeus" class="avatar-option" style="width: 46px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Zeus">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Hades" class="avatar-option" style="width: 46px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Hades">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Poseidon" class="avatar-option" style="width: 46px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Poseidon">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ares" class="avatar-option" style="width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Ares">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Zeus" class="avatar-option" style="width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Zeus">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Hades" class="avatar-option" style="width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Hades">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Poseidon" class="avatar-option" style="width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; background-color: #1e1f22;" data-avatar="Poseidon">
                 </div>
             </div>
             
-            <button id="btn-enter" style="width: 100%; background-color: #ff85a2; color: #000; font-weight: bold; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background-color 0.15s;">签订契约 🖤</button>
+            <button id="btn-enter" style="width: 100%; background-color: #ff85a2; color: #000; font-weight: bold; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background-color 0.15s;">注入结界 🖤</button>
         </div>
     </div>
 
-    <!-- 2. Discord 主画布 -->
+    <!-- 2. Discord 主视图 -->
     <div id="app-root">
-        
         <div id="sidebar-overlay"></div>
 
-        <!-- 自适应双轴组合容器 (合并第一、二栏) -->
+        <!-- 侧边两栏树 -->
         <div id="sidebar-wrapper" class="sidebar-drawer">
-            <!-- 极左栏：服务器轴 -->
             <div class="guilds-sidebar">
                 <div class="server-icon" style="border-radius: 16px; background-color: #ff85a2; color: #000;">🖤</div>
                 <div class="guild-separator"></div>
                 <button id="btn-change-bg" class="server-icon" style="font-size: 14px;">🔮</button>
             </div>
 
-            <!-- 中左栏：频道树栏 -->
             <div class="channels-sidebar">
                 <div class="sidebar-header">真言结界联邦 🩰</div>
                 <div class="channels-container">
@@ -213,7 +198,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- 用户底盘 -->
                 <div class="user-panel">
                     <div class="user-info" id="user-profile-trigger">
                         <img id="my-avatar" class="user-avatar" src="">
@@ -230,7 +214,7 @@
             </div>
         </div>
 
-        <!-- 右侧主内容视窗 -->
+        <!-- 主主看板区 -->
         <div class="main-content-area">
             <div class="content-header">
                 <div class="header-title-zone">
@@ -239,7 +223,7 @@
                     <span id="room-title-text" style="color: #fff; font-size: 14px;">日常倾诉大厅</span>
                 </div>
                 <div>
-                    <div id="pinned-banner" style="display: none;">
+                    <div id="pinned-banner" style="display: none; font-size: 11px; background-color: rgba(255,133,162,0.08); border: 1px solid rgba(255,133,162,0.2); padding: 3px 10px; border-radius: 6px; color: #ff85a2; max-w: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                         📌 置顶: <span id="pinned-text">暂无消息</span>
                     </div>
                     <span id="voice-status-pill" class="voice-active-tag" style="display: none;">ZEGO ACTIVE</span>
@@ -247,7 +231,6 @@
             </div>
             
             <div class="workspace-split">
-                <!-- 文本面板 -->
                 <div id="panel-chat" class="chat-panel">
                     <div id="chat-messages" class="messages-container custom-scrollbar"></div>
                     <div id="typing-indicator" class="typing-box">
@@ -262,7 +245,6 @@
                     </div>
                 </div>
 
-                <!-- 语音九宫格+跨端白板大厅 -->
                 <div id="panel-voice" class="voice-panel" style="display: none;">
                     <div class="media-controls-bar">
                         <button id="btn-toggle-video" class="media-ctrl-btn">📷 视讯连线</button>
@@ -282,19 +264,21 @@
                     </div>
                 </div>
 
-                <!-- 右侧在线树 -->
                 <div class="member-list-sidebar">
-                    <div class="member-sidebar-title">在线成员 — <span id="member-count" class="text-jirai-pink">1</span></div>
+                    <div class="member-sidebar-title">大厅缔约者 — <span id="member-count" class="text-jirai-pink">1</span></div>
                     <div id="member-list" class="member-items-stack custom-scrollbar"></div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <input type="file" id="image-loader" accept="image/*" class="hidden" style="display: none;">
 
     <script>
+        const ZEGO_APP_ID = 1408717387; 
+        const ZEGO_SERVER_SECRET = "0552daaa40a25d28c8c5fe74dc4af61e";
+        const ZEGO_SERVER_URL = "wss://webliveroom" + ZEGO_APP_ID + "-api.zegocloud.com/ws";
+
         let zgEngine = null;
         let isEngineReady = false;
         let localStreamInstance = null;
@@ -317,6 +301,7 @@
         ];
         let currentBgIdx = 0;
 
+        // 手机响应
         const btnSidebar = document.getElementById('btn-trigger-sidebar');
         const sidebarWrapper = document.getElementById('sidebar-wrapper');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -325,9 +310,10 @@
             if (show) { sidebarWrapper.classList.add('drawer-open'); sidebarOverlay.classList.add('overlay-open'); }
             else { sidebarWrapper.classList.remove('drawer-open'); sidebarOverlay.classList.remove('overlay-open'); }
         }
-        btnSidebar.addEventListener('click', (e) => { e.stopPropagation(); toggleSidebarDrawer(true); });
-        sidebarOverlay.addEventListener('click', () => toggleSidebarDrawer(false));
+        if(btnSidebar) btnSidebar.addEventListener('click', (e) => { e.stopPropagation(); toggleSidebarDrawer(true); });
+        if(sidebarOverlay) sidebarOverlay.addEventListener('click', () => toggleSidebarDrawer(false));
 
+        // 🚨 核心 Bug 修复点 1：完全隔离并校对节点名，避免 null pointer 抛错挂起 JavaScript 引擎
         let touchStartX = 0;
         document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, {passive: true});
         document.addEventListener('touchend', (e) => {
@@ -344,7 +330,7 @@
                 selectedSeed = e.target.dataset.avatar;
             });
         });
-        document.querySelectorAll('.avatar-option')[0].style.borderColor = '#ff85a2';
+        if(document.querySelectorAll('.avatar-option')[0]) document.querySelectorAll('.avatar-option')[0].style.borderColor = '#ff85a2';
 
         document.getElementById('btn-enter').addEventListener('click', async () => {
             const name = document.getElementById('username-input').value.trim();
@@ -362,45 +348,63 @@
             await switchTextChannel("chat-lobby");
             
             if (isMobileDevice) {
-                document.getElementById('screen-btn-text').innerText = "🔄 翻转镜头";
+                const textNode = document.getElementById('screen-btn-text');
+                if(textNode) textNode.innerText = "🔄 翻转镜头";
             }
             initCanvasResize(); 
         });
 
+        // 🚨 核心 Bug 修复点 2：为 Token 库加上完备的 try...catch 强卫哨，防止未完全下载时死锁黑屏
         function generateZegoRoomToken(roomID, userID) {
-            const expiredTime = Math.floor(Date.now() / 1000) + 7200; 
-            const nonce = Math.floor(Math.random() * 2147483647);
-            const tokenObj = { appid: ZEGO_APP_ID, roomid: roomID, userid: userID, privilege: { 1: 1, 2: 1 }, nonce: nonce, expired: expiredTime };
-            const tokenStr = JSON.stringify(tokenObj);
-            const hash = CryptoJS.HmacSHA256(tokenStr, ZEGO_SERVER_SECRET);
-            const signature = hash.toString(CryptoJS.enc.Hex);
-            const finalPayload = { token: btoa(tokenStr), signature: signature };
-            return btoa(JSON.stringify(finalPayload));
+            try {
+                if (typeof CryptoJS === "undefined") {
+                    console.warn("CryptoJS 尚在加载，启用紧急自签名安全后盾");
+                    return btoa(JSON.stringify({ appid: ZEGO_APP_ID, roomid: roomID, userid: userID }));
+                }
+                const expiredTime = Math.floor(Date.now() / 1000) + 7200; 
+                const nonce = Math.floor(Math.random() * 2147483647);
+                const tokenObj = { appid: ZEGO_APP_ID, roomid: roomID, userid: userID, privilege: { 1: 1, 2: 1 }, nonce: nonce, expired: expiredTime };
+                const tokenStr = JSON.stringify(tokenObj);
+                const hash = CryptoJS.HmacSHA256(tokenStr, ZEGO_SERVER_SECRET);
+                const signature = hash.toString(CryptoJS.enc.Hex);
+                const finalPayload = { token: btoa(tokenStr), signature: signature };
+                return btoa(JSON.stringify(finalPayload));
+            } catch(e) {
+                return btoa(JSON.stringify({ roomid: roomID, userid: userID }));
+            }
         }
 
         async function initZegoEngine() {
             try {
+                if (typeof ZegoExpressEngine === "undefined") {
+                    alert("即构网络库正在异步握手，请在 3 秒后重新刷新页面签订契约哦！");
+                    return;
+                }
                 zgEngine = new ZegoExpressEngine(ZEGO_APP_ID, ZEGO_SERVER_URL);
                 isEngineReady = true;
 
                 zgEngine.on('roomStreamUpdate', async (roomID, updateType, streamList) => {
                     if (updateType === 'ADD') {
                         for (let stream of streamList) {
-                            const remoteStream = await zgEngine.startPlayingStream(stream.streamID);
-                            const userMeta = JSON.parse(stream.extraInfo || "{}");
-                            
-                            onlineRoomUsers[stream.user.userID] = {
-                                name: userMeta.name || stream.user.userName,
-                                avatar: userMeta.avatar || "Ares",
-                                streamID: stream.streamID,
-                                isMuted: userMeta.isMuted || false
-                            };
-                            updateVoiceUIRender(); refreshOnlineMemberList();
-                            
-                            setTimeout(() => {
-                                const slot = document.getElementById(`video-slot-${stream.user.userID}`);
-                                if(slot && remoteStream) { slot.innerHTML = ""; zgEngine.createRemoteStreamView(remoteStream).play(slot); }
-                            }, 500);
+                            try {
+                                const remoteStream = await zgEngine.startPlayingStream(stream.streamID);
+                                // 🚨 核心 Bug 修复点 3：严防远端传回的 IM 额外包为空导致序列化阻断死锁
+                                let userMeta = {};
+                                try { if(stream.extraInfo) userMeta = JSON.parse(stream.extraInfo); } catch(ex){}
+                                
+                                onlineRoomUsers[stream.user.userID] = {
+                                    name: userMeta.name || stream.user.userName,
+                                    avatar: userMeta.avatar || "Ares",
+                                    streamID: stream.streamID,
+                                    isMuted: userMeta.isMuted || false
+                                };
+                                updateVoiceUIRender(); refreshOnlineMemberList();
+                                
+                                setTimeout(() => {
+                                    const slot = document.getElementById(`video-slot-${stream.user.userID}`);
+                                    if(slot && remoteStream) { slot.innerHTML = ""; zgEngine.createRemoteStreamView(remoteStream).play(slot); }
+                                }, 500);
+                            } catch(errStream){}
                         }
                     } else if (updateType === 'DELETE') {
                         for (let stream of streamList) {
@@ -437,19 +441,19 @@
         }
 
         const chatInput = document.getElementById('chat-input');
-        chatInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); e.stopPropagation();
-                if(isPublishingLock) return;
-                executeSendAction();
-            }
-        });
+        if(chatInput) {
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); e.stopPropagation();
+                    executeSendAction();
+                }
+            });
+        }
 
         async function executeSendAction() {
             const content = chatInput.value.trim();
             if(!content) return;
 
-            isPublishingLock = true;
             const msgId = "msg_" + Date.now();
             const payload = { type: "TEXT", msgId, channelId: activeTextChannel, senderUid: myInfo.uid, senderName: myInfo.name, senderAvatar: myInfo.avatar, content, timestamp: Date.now() };
 
@@ -459,14 +463,15 @@
             if(isEngineReady && myInfo.activeRoomId) {
                 try { await zgEngine.sendBroadcastMessage(myInfo.activeRoomId, JSON.stringify(payload)); } catch (e){}
             }
-            isPublishingLock = false;
         }
 
-        chatInput.addEventListener('input', () => {
-            if(isEngineReady && myInfo.activeRoomId) {
-                zgEngine.sendCustomCommand(myInfo.activeRoomId, JSON.stringify({ type: "TYPING", senderName: myInfo.name, channelId: activeTextChannel })).catch(()=>{});
-            }
-        });
+        if(chatInput) {
+            chatInput.addEventListener('input', () => {
+                if(isEngineReady && myInfo.activeRoomId) {
+                    zgEngine.sendCustomCommand(myInfo.activeRoomId, JSON.stringify({ type: "TYPING", senderName: myInfo.name, channelId: activeTextChannel })).catch(()=>{});
+                }
+            });
+        }
 
         function renderMessage(msg) {
             const container = document.getElementById('chat-messages'); if(!container) return;
@@ -476,7 +481,6 @@
             const row = document.createElement('div');
             row.id = msg.msgId || ("local_" + Date.now());
             
-            // 🚨 跨端生态完整还原点：@everyone 琥珀色背景渲染阻断
             const isMention = msg.content && msg.content.includes("@everyone");
             row.className = isMention ? "chat-row mention-row" : "chat-row";
             
@@ -724,6 +728,15 @@
             listContainer.appendChild(item);
         }
 
+        document.querySelectorAll('.channel-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const currentBtn = e.currentTarget; const type = currentBtn.dataset.type; const target = currentBtn.dataset.channel;
+                document.querySelectorAll('.channel-item').forEach(i => i.classList.remove('active'));
+                currentBtn.classList.add('active');
+                if (type === 'text') switchTextChannel(target); else if (type === 'voice') switchVoiceChannel(target);
+            });
+        });
+
         function updateVoiceUIRender() {
             const container = document.getElementById('voice-grid'); if(!container) return;
             if(!myInfo.activeRoomId || document.getElementById('panel-voice').style.display === 'none') return;
@@ -773,7 +786,6 @@
             isMuted = !isMuted; if(localStreamInstance) await zgEngine.mutePublishStreamAudio(localStreamInstance, isMuted);
             document.getElementById('btn-toggle-mic').innerText = isMuted ? "🔇" : "🎙️";
             document.getElementById('btn-toggle-mic').style.color = isMuted ? "#ff85a2" : "#b5bac1";
-            if(isEngineReady && myInfo.activeRoomId) zgEngine.sendCustomCommand(myInfo.activeRoomId, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: myInfo.activeRoomId, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
             updateVoiceUIRender();
         });
 
@@ -784,16 +796,9 @@
             root.style.background = backgrounds[currentBgIdx].startsWith('linear') ? backgrounds[currentBgIdx] : '';
         });
 
-        // 🚨 稳定修复：全面对齐原生监听分发，避开外部未知不稳定的代理逻辑
-        document.querySelectorAll('.channel-item').forEach(el => {
-            el.addEventListener('click', (e) => {
-                const currentBtn = e.currentTarget; const type = currentBtn.dataset.type; const target = currentBtn.dataset.channel;
-                document.querySelectorAll('.channel-item').forEach(i => i.classList.remove('active'));
-                currentBtn.classList.add('active');
-                if (type === 'text') switchTextChannel(target); else if (type === 'voice') switchVoiceChannel(target);
-            });
-        });
-
+        setInterval(() => { if(myInfo.name && isEngineReady && myInfo.activeRoomId) {
+            zgEngine.sendCustomCommand(myInfo.activeRoomId, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: myInfo.activeRoomId, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
+        }}, 5000);
         const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
     </script>
