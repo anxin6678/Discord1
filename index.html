@@ -78,7 +78,7 @@
     <!-- 1. 契约建立弹窗 -->
     <div id="login-overlay" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-jirai-dark p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/30 text-center shadow-2xl shadow-jirai-glow">
-            <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔦r𝔞𝔦 𝔎𝔢𝔦 🖤</div>
+            <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔦𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
             <h2 class="text-base font-bold mb-1 text-white">地雷物语 · ZEGO 终极稳定大厅</h2>
             <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Variable Deadlock & Token Reference Fixed</p>
             
@@ -121,18 +121,18 @@
                             <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">文字互动频道</div>
                             <div class="space-y-0.5" id="text-channels-list">
                                 <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-jirai-pink bg-jirai-pink/10 border border-jirai-pink/10 cursor-pointer text-xs font-medium transition" data-type="text" data-channel="chat-lobby">
-                                    <span class="mr-2 text-neutral-600 font-bold">#</span> <span>日常沉沦大厅</span>
+                                    <span class="mr-2 text-neutral-600 font-bold">#</span> <span class="channel-name-text">日常沉沦大厅</span>
                                 </div>
                                 <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="text" data-channel="announcements">
-                                    <span class="mr-2 text-neutral-600 font-bold">#</span> <span>契约置顶榜</span>
+                                    <span class="mr-2 text-neutral-600 font-bold">#</span> <span class="channel-name-text">契约置顶榜</span>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">多媒体语音大厅</div>
                             <div class="space-y-0.5" id="voice-channels-list">
-                                <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="global-server-room">
-                                    <span class="mr-2">🔮</span> <span>千重夜话连线厅</span>
+                                <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="voice-lobby">
+                                    <span class="mr-2">🔮</span> <span class="channel-name-text">千重夜话连线厅</span>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +162,7 @@
                 <div class="flex items-center space-x-3">
                     <button id="btn-trigger-sidebar" class="hamburger-btn">☰</button>
                     <div class="flex items-center space-x-2" id="room-title">
-                        <span class="text-jirai-pink text-xl">#</span> <span>日常沉沦大厅</span>
+                        <span id="room-title-hashtag" class="text-jirai-pink text-xl">#</span> <span id="room-title-text">日常沉沦大厅</span>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -211,7 +211,7 @@
                     </div>
                 </div>
 
-                <!-- 第四栏：最右侧在线树列表 (锁死原版 Discord 224px 宽度) -->
+                <!-- 第四栏：最右侧在线成员树列表 (锁死原版 Discord 224px 宽度) -->
                 <div class="member-list-sidebar max-w-[224px] bg-jirai-dark flex flex-col border-l border-jirai-blacker hidden lg:flex flex-shrink-0">
                     <div class="p-3 text-[11px] font-bold text-neutral-400 uppercase tracking-wider border-b border-jirai-blacker">大厅缔约者 — <span id="member-count" class="text-jirai-pink">1</span></div>
                     <div id="member-list" class="member-items-stack custom-scrollbar px-2 pt-2 space-y-0.5"></div>
@@ -220,10 +220,11 @@
         </div>
     </div>
 
+    <!-- 隐藏多媒体资产探针 -->
     <input type="file" id="image-loader" accept="image/*" class="hidden">
 
     <script>
-        // 🛑 核心修复点 1：将混乱不匹配的 CONST_ROOM_ID 与 NATIVE_ROOM_ID 全盘物理合并为统一常量
+        // 🔒 物理锁死：全局统合唯一常驻房间名，阻断所有因冲突引发的 ReferenceError 异常
         const ZEGO_ROOM_ID = "global-server-room"; 
         const ZEGO_APP_ID = 1408717387; 
         const ZEGO_SERVER_SECRET = "0552daaa40a25d28c8c5fe74dc4af61e";
@@ -234,7 +235,6 @@
         let localStreamInstance = null;
         
         let myInfo = { uid: "", name: "", avatar: "Ares", activeRoomId: "", statusText: "🎀 处于混沌极点" };
-        // 🛑 核心修复点 2：本地在线成员注册列表缓存状态机，解决 getRoomUserList 不存在的运行时TypeError异常
         let roomUsersPresence = {}; 
         let onlineRoomUsers = {}; 
         let activeTextChannel = "chat-lobby";
@@ -383,7 +383,6 @@
                     } catch(e){}
                 });
 
-                // 🛑 核心修复点 2：基于 SDK 推流临场拓扑更新，彻底摒弃 getRoomUserList 同步方法的局限性
                 zgEngine.on('roomUserUpdate', (roomID, updateType, userList) => {
                     if (updateType === 'ADD') {
                         userList.forEach(u => { roomUsersPresence[u.userID] = u.userName; });
@@ -514,7 +513,8 @@
             
             const itemEl = document.querySelector(`[data-channel="${channelId}"]`);
             document.getElementById('room-title-hashtag').innerText = "#";
-            document.getElementById('room-title-text').innerText = itemEl ? itemEl.querySelector('span:not([style])').innerText : channelId;
+            // 🛑 核心精细优化：利用类选择器锁定真实的文字，不再让小图标破坏顶栏标题
+            document.getElementById('room-title-text').innerText = itemEl ? itemEl.querySelector('.channel-name-text').innerText : channelId;
             
             document.getElementById('panel-chat').style.display = 'flex'; 
             document.getElementById('panel-voice').style.display = 'none';
@@ -526,7 +526,7 @@
             
             const itemEl = document.querySelector(`[data-channel="${channelId}"]`);
             document.getElementById('room-title-hashtag').innerText = "🔊";
-            document.getElementById('room-title-text').innerText = itemEl ? itemEl.querySelector('span').innerText : channelId;
+            document.getElementById('room-title-text').innerText = itemEl ? itemEl.querySelector('.channel-name-text').innerText : channelId;
             
             document.getElementById('panel-chat').style.display = 'none'; 
             document.getElementById('panel-voice').style.display = 'flex';
@@ -665,6 +665,7 @@
             });
         }
 
+        // 🛑 核心修复点 3：强安全防护空值校验，彻底斩断由于 undefined.replace 产生的所有未知脚本崩溃异常
         async function refreshOnlineMemberList() {
             if(!isEngineReady) return;
             try {
@@ -672,11 +673,13 @@
                 listContainer.innerHTML = ""; let count = 0;
                 appendMemberItem(myInfo.name, myInfo.avatar, myInfo.statusText, true); count++;
                 
-                // 渲染在线数据
                 for (let uid in roomUsersPresence) {
                     if (uid === myInfo.uid) continue;
                     const cached = onlineRoomUsers[uid];
-                    appendMemberItem(cached ? cached.name : roomUsersPresence[uid], cached ? cached.avatar : "Ares", cached ? cached.statusText : "🎀 已在大厅连线", false); count++;
+                    const name = cached && cached.name ? cached.name : roomUsersPresence[uid];
+                    const avatar = cached && cached.avatar ? cached.avatar : "Ares";
+                    const status = cached && cached.statusText ? cached.statusText : "🎀 已在大厅连线";
+                    appendMemberItem(name, avatar, status, false); count++;
                 }
                 document.getElementById('member-count').innerText = count;
             } catch(e){}
@@ -690,7 +693,6 @@
             listContainer.appendChild(item);
         }
 
-        // 绑定节点代理切换
         document.querySelectorAll('.channel-item').forEach(el => {
             el.addEventListener('click', (e) => {
                 const currentBtn = e.currentTarget; const type = currentBtn.dataset.type; const target = currentBtn.dataset.channel;
@@ -763,7 +765,7 @@
             zgEngine.sendCustomCommand(ZEGO_ROOM_ID, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: activeTextChannel, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
         }}, 5000);
         const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
+        function escapeHTML(str) { if (!str) return ''; return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
     </script>
 </body>
 </html>
