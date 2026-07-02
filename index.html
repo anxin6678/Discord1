@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Discord Sovereign Luxury Edition</title>
-    <!-- 引入稳定高效的国内全加速 Tailwind CSS v3 编译源，彻底解决巨大化 Bug -->
-    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/3.0.23/tailwind.min.js"></script>
-    <!-- 引入即构科技 ZEGOCLOUD 官方最新 Web SDK (使用国内高速加速源) -->
+    <!-- 引入国内三大运营商 BGP 骨干网直连、最稳定的完整高版本 Tailwind CSS，彻底解决电脑端巨大化 Bug -->
+    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/3.4.15/tailwind.min.js"></script>
+    <!-- 引入即构科技 ZEGOCLOUD 官方 Web SDK (国内高速加速源) -->
     <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/zego-express-engine-webrtc/3.0.0/ZegoExpressWebRTC.js"></script>
-    <!-- 引入前端动态加密 CryptoJS (国内字节跳动 CDN 加速源) -->
+    <!-- 引入加密组件 (字节跳动镜像源) -->
     <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
-        /* 像素级复刻：Discord 官方最新标准暗黑调色盘 + 地雷粉霓虹微透晶体 */
-        body { background-color: #111214; -webkit-tap-highlight-color: transparent; color: #f3f4f6; }
+        /* 像素级复刻：Discord 官方最新标准暗黑调色盘 */
+        body { background-color: #111214; -webkit-tap-highlight-color: transparent; color: #dbdee1; font-size: 14px; }
         .bg-discord-guilds { background-color: #1e1f22; }
         .bg-discord-sidebar { background-color: #2b2d31; }
         .bg-discord-main { background-color: #313338; }
@@ -22,31 +22,31 @@
         .text-jirai-pink { color: #ff85a2; }
         .border-jirai-pink { border-color: #ff85a2; }
         .bg-jirai-pink { background-color: #ff85a2; }
-        .shadow-jirai-glow { box-shadow: 0 0 20px rgba(255, 133, 162, 0.25); }
         
-        /* 侧边栏抽屉移动端自适应动画 */
-        .sidebar-drawer { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* 移动端侧边抽屉平滑动画 */
+        .sidebar-drawer { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* Discord 经典物理阻尼圆角拟真悬停 */
-        .server-icon { transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); border: 2px solid #1e1f22; }
+        /* Discord 经典圆角悬停动画 */
+        .server-icon { transition: all 0.2s ease; border: 2px solid #1e1f22; }
         .server-icon:hover { border-radius: 16px !important; border-color: #ff85a2 !important; background-color: #ff85a2 !important; box-shadow: 0 0 15px #ff85a2; color: #000; }
         
-        /* 聊天行原版悬停：高保真 Discord 视觉高亮 */
+        /* 聊天行原版悬停变色 */
         .chat-row { transition: background-color 0.1s ease; position: relative; }
-        .chat-row:hover { background-color: rgba(0, 0, 0, 0.08); }
+        .chat-row:hover { background-color: rgba(0, 0, 0, 0.05); }
         .chat-row .msg-actions { opacity: 0; transition: opacity 0.1s ease; }
         .chat-row:hover .msg-actions { opacity: 1; }
         
-        /* 经典激活指示条 */
+        /* 经典左侧频道激活小竖条指示器 */
         .active-indicator { width: 4px; height: 20px; background-color: #ff85a2; border-radius: 0 4px 4px 0; position: absolute; left: 0; }
         
-        /* 说话时粉红发光光圈 */
-        .is-speaking { border-color: #ff85a2 !important; box-shadow: 0 0 18px rgba(255, 133, 162, 0.7) !important; }
+        /* 说话时粉红发光卡片 */
+        .is-speaking { border-color: #ff85a2 !important; box-shadow: 0 0 18px rgba(255, 133, 162, 0.6) !important; }
         
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 10px; }
 
+        /* 卡片多维大画布放大器 */
         .video-card-expanded {
             grid-column: 1 / -1 !important;
             grid-row: span 2 !important;
@@ -61,21 +61,19 @@
         .dot-blink:nth-child(3) { animation-delay: 0.4s; }
         
         .video-view-container video { object-fit: cover !important; border-radius: 8px; width: 100%; height: 100%; }
-        
-        /* 白板图层置顶样式 */
         #whiteboard-canvas { cursor: crosshair; touch-action: none; background-color: #1a1a24; }
     </style>
 </head>
 <body class="select-none overflow-hidden font-sans antialiased text-xs sm:text-sm">
 
-    <!-- 1. 契约信息登录弹窗 -->
+    <!-- 1. 契密设置弹窗 -->
     <div id="login-overlay" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-discord-sidebar p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/20 text-center shadow-2xl shadow-jirai-glow">
+        <div class="bg-discord-sidebar p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/20 text-center shadow-2xl">
             <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔦𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
-            <h2 class="text-base font-bold mb-1 text-white">地雷物语 · 跨端全极速大厅</h2>
-            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">PC Layout Size & TailWind v3 Fixed</p>
+            <h2 class="text-base font-bold mb-1 text-white">地雷物语 · 跨端自适应私服</h2>
+            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">PC Layout Core & Tailwind Engine Fixed</p>
             
-            <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">您的专属名号 🎀</label>
+            <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">您的昵称 🎀</label>
             <input type="text" id="username-input" maxlength="12" placeholder="请输入昵称..." class="w-full p-2.5 bg-discord-guilds rounded-xl focus:outline-none focus:ring-1 focus:ring-jirai-pink mb-6 text-white border border-neutral-900 text-sm">
             
             <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">契约系统头像 🖤</label>
@@ -90,33 +88,33 @@
         </div>
     </div>
 
-    <!-- 2. Discord 主视图 -->
+    <!-- 2. Discord 主框架 -->
     <div id="app-root" class="flex h-screen w-screen bg-discord-main overflow-hidden relative">
         
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden transition-opacity"></div>
 
-        <!-- 侧边树抽屉 (严格限制电脑端的宽度，拒绝变大) -->
-        <div id="sidebar-wrapper" class="sidebar-drawer fixed lg:static inset-y-0 left-0 flex z-40 transform -translate-x-full lg:translate-x-0 flex-shrink-0">
-            <!-- 极左服务器列表 (锁死原版 Discord 的 72px 宽度) -->
-            <div class="w-[72px] bg-discord-guilds flex flex-col items-center py-3 space-y-2 flex-shrink-0 border-r border-black/20">
+        <!-- 侧边两栏树（显式设定固定像素宽度，彻底防止 PC 端巨大化） -->
+        <div id="sidebar-wrapper" class="sidebar-drawer fixed lg:static inset-y-0 left-0 flex z-40 -translate-x-full lg:translate-x-0 flex-shrink-0">
+            <!-- 极左服务器序列栏 (锁死 72px 宽度，图标限制 h-12) -->
+            <div class="w-[72px] max-w-[72px] bg-discord-guilds flex flex-col items-center py-3 space-y-2 flex-shrink-0 border-r border-black/20">
                 <div class="server-icon w-12 h-12 bg-discord-sidebar rounded-[24px] flex items-center justify-center cursor-pointer text-jirai-pink font-extrabold text-base shadow">🖤</div>
                 <div class="w-8 h-[2px] bg-neutral-800 rounded"></div>
                 <button id="btn-change-bg" class="server-icon w-12 h-12 bg-discord-input rounded-[24px] flex items-center justify-center cursor-pointer text-base">🔮</button>
             </div>
 
-            <!-- 中左频道树列表 (锁死原版 Discord 的 240px 宽度) -->
-            <div class="w-60 bg-discord-sidebar flex flex-col justify-between flex-shrink-0 border-r border-black/10">
+            <!-- 中左频道树栏 (锁死 240px 宽度，字体锁定为细巧的 text-xs) -->
+            <div class="w-60 max-w-[240px] bg-discord-sidebar flex flex-col justify-between flex-shrink-0 border-r border-black/10">
                 <div class="flex-1 overflow-y-auto custom-scrollbar">
-                    <div class="h-12 border-b border-discord-guilds flex items-center px-4 font-bold text-white tracking-wide shadow-sm truncate text-sm">真言联邦界 🩰</div>
+                    <div class="h-12 border-b border-discord-guilds flex items-center px-4 font-bold text-white tracking-wide shadow-sm truncate text-xs">真言联邦界 🩰</div>
                     <div class="p-2 space-y-4">
                         <div>
                             <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">文字板块</div>
                             <div class="space-y-0.5" id="text-channels-container">
-                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-white bg-neutral-700/40 cursor-pointer text-xs font-medium transition" data-type="text" data-channel="chat-lobby">
+                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded text-white bg-neutral-700/40 cursor-pointer text-xs font-medium transition" data-type="text" data-channel="chat-lobby">
                                     <div class="active-indicator"></div>
                                     <span class="mr-2 text-neutral-500 font-bold ml-2">#</span> <span>日常沉沦大厅</span>
                                 </div>
-                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="text" data-channel="announcements">
+                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="text" data-channel="announcements">
                                     <span class="mr-2 text-neutral-500 font-bold ml-2">#</span> <span>契约置顶榜</span>
                                 </div>
                             </div>
@@ -124,7 +122,7 @@
                         <div>
                             <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">语音连线大厅</div>
                             <div class="space-y-0.5" id="voice-channels-container">
-                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="voice-lobby">
+                                <div class="channel-item relative flex items-center px-2 py-1.5 rounded text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="voice-lobby">
                                     <span class="mr-2 ml-2">🔮</span> <span>千重夜话连线厅</span>
                                 </div>
                             </div>
@@ -134,7 +132,7 @@
                 <div class="h-14 bg-discord-userpanel flex items-center justify-between px-2 flex-shrink-0">
                     <div class="flex items-center space-x-1.5 overflow-hidden cursor-pointer group mr-0.5" id="user-profile-trigger">
                         <img id="my-avatar" src="" class="w-8 h-8 rounded-full bg-neutral-800 border border-jirai-pink/20">
-                        <div class="text-xs font-semibold truncate max-w-[90px]">
+                        <div class="text-xs font-semibold truncate max-w-[85px]">
                             <p id="my-name" class="text-white truncate leading-tight"></p>
                             <span id="my-status-text" class="text-neutral-500 text-[9px] block leading-none mt-0.5 truncate">🎀 点击改签...</span>
                         </div>
@@ -147,12 +145,13 @@
             </div>
         </div>
 
-        <!-- 主内容区 -->
+        <!-- 极右侧：主视窗面板 -->
         <div class="flex-1 flex flex-col min-w-0 bg-transparent relative">
+            <!-- 顶栏状态条 -->
             <div class="h-12 border-b border-discord-guilds flex items-center justify-between px-4 font-bold text-white shadow-sm flex-shrink-0 z-10 bg-discord-main/60 backdrop-blur-md">
                 <div class="flex items-center space-x-3">
                     <button id="btn-trigger-sidebar" class="block lg:hidden text-jirai-pink text-xl hover:text-white transition p-1.5 bg-discord-input rounded-xl border border-jirai-pink/10">☰</button>
-                    <div class="flex items-center space-x-2 text-sm" id="room-title">
+                    <div class="flex items-center space-x-2 text-xs sm:text-sm" id="room-title">
                         <span class="text-jirai-pink text-xl">#</span> <span>日常沉沦大厅</span>
                     </div>
                 </div>
@@ -180,7 +179,7 @@
                     </div>
                 </div>
 
-                <!-- 视频与语音多媒体大厅（画面完美适配，支持全屏放大） -->
+                <!-- 视频与语音多媒体大厅 -->
                 <div id="panel-voice" class="flex-1 p-3 flex flex-col hidden bg-black/20 overflow-hidden">
                     <div class="mb-3 p-1.5 bg-discord-sidebar border border-jirai-pink/10 rounded-xl flex items-center justify-center space-x-2 sm:space-x-4 flex-shrink-0 shadow-lg">
                         <button id="btn-toggle-video" class="px-3 py-1 bg-discord-input hover:bg-jirai-pink hover:text-black rounded-lg border border-jirai-pink/10 transition flex items-center space-x-1 text-xs"><span>📷</span> <span>视讯镜头</span></button>
@@ -189,10 +188,7 @@
                     </div>
                     
                     <div class="flex-1 flex flex-col md:flex-row gap-3 overflow-hidden">
-                        <!-- 视频网格 -->
                         <div id="voice-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto custom-scrollbar"></div>
-                        
-                        <!-- 跨端同步画壁 -->
                         <div id="whiteboard-area" class="w-full md:w-1/2 h-64 md:h-full bg-jirai-dark border border-jirai-pink/20 rounded-xl flex-col overflow-hidden hidden">
                             <div class="p-2 bg-jirai-blacker border-b border-jirai-pink/10 flex items-center justify-between text-[11px] text-neutral-400">
                                 <span class="text-jirai-pink font-bold">🎨 跨端同步画壁 (Whiteboard Room)</span>
@@ -203,8 +199,8 @@
                     </div>
                 </div>
 
-                <!-- 右侧在线树列 (锁死原版 208px 宽度) -->
-                <div class="w-52 bg-discord-sidebar flex flex-col border-l border-black/20 hidden lg:flex flex-shrink-0">
+                <!-- 右侧在线树列 (锁死 208px 宽度) -->
+                <div class="w-52 max-w-[208px] bg-discord-sidebar flex flex-col border-l border-black/20 hidden lg:flex flex-shrink-0">
                     <div class="p-3 text-[11px] font-bold text-neutral-400 uppercase tracking-wider border-b border-discord-guilds">大厅缔约者 — <span id="member-count" class="text-jirai-pink">1</span></div>
                     <div id="member-list" class="flex-1 overflow-y-auto custom-scrollbar px-2 pt-2 space-y-0.5"></div>
                 </div>
@@ -682,12 +678,29 @@
             } catch(e){}
         }
 
+        // 显式缩写字体大小，锁死 PC 端的展现
         function appendMemberItem(name, avatarSeed, status, isMe) {
             const listContainer = document.getElementById('member-list');
-            const item = document.createElement('div'); item.className = "flex flex-col p-1 hover:bg-neutral-700/30 rounded-xl cursor-pointer transition";
-            item.innerHTML = `<div class="flex items-center space-x-2"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=${avatarSeed}" class="w-5 h-5 rounded-full bg-jirai-blacker"><span class="text-xs text-neutral-300 font-medium truncate flex-1">${escapeHTML(name)} ${isMe ? '<span class="text-jirai-pink font-bold text-[9px]">[我]</span>':''}</span></div><div class="text-[9px] text-neutral-500 pl-7 truncate">${escapeHTML(status)}</div>`;
+            const item = document.createElement('div'); item.className = "flex flex-col p-1 hover:bg-neutral-700/30 rounded-xl cursor-pointer transition text-xs";
+            item.innerHTML = `<div class="flex items-center space-x-2"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=${avatarSeed}" class="w-5 h-5 rounded-full bg-jirai-blacker"><span class="font-medium text-neutral-200 truncate flex-1">${escapeHTML(name)} ${isMe ? '<span class="text-jirai-pink font-bold text-[9px]">[我]</span>':''}</span></div><div class="text-[9px] text-neutral-500 pl-7 truncate">${escapeHTML(status)}</div>`;
             listContainer.appendChild(item);
         }
+
+        document.querySelectorAll('.channel-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const currentBtn = e.currentTarget;
+                const type = currentBtn.dataset.type;
+                const target = currentBtn.dataset.channel;
+
+                document.querySelectorAll('.channel-item').forEach(i => {
+                    i.className = "channel-item relative flex items-center px-2 py-1.5 rounded text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition";
+                });
+                currentBtn.className = "channel-item relative flex items-center px-2 py-1.5 rounded text-white bg-neutral-700/40 cursor-pointer text-xs font-medium transition";
+                
+                if (type === 'text') switchTextChannel(target); 
+                else if (type === 'voice') switchVoiceChannel(target);
+            });
+        });
 
         function updateVoiceUIRender() {
             const container = document.getElementById('voice-grid'); if(!container) return;
@@ -756,22 +769,9 @@
             root.style.background = backgrounds[currentBgIdx].startsWith('linear') ? backgrounds[currentBgIdx] : '';
         });
 
-        document.querySelectorAll('.channel-item').forEach(el => {
-            el.addEventListener('click', (e) => {
-                const currentBtn = e.currentTarget;
-                const type = currentBtn.dataset.type;
-                const target = currentBtn.dataset.channel;
-
-                document.querySelectorAll('.channel-item').forEach(i => {
-                    i.className = "channel-item relative flex items-center px-2 py-1.5 rounded-md text-neutral-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition";
-                });
-                currentBtn.className = "channel-item relative flex items-center px-2 py-1.5 rounded-md text-white bg-neutral-700/40 cursor-pointer text-xs font-medium transition";
-                
-                if (type === 'text') switchTextChannel(target); 
-                else if (type === 'voice') switchVoiceChannel(target);
-            });
-        });
-
+        setInterval(() => { if(myInfo.name && isEngineReady && myInfo.activeRoomId) {
+            zgEngine.sendCustomCommand(myInfo.activeRoomId, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: myInfo.activeRoomId, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
+        }}, 5000);
         function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
     </script>
 </body>
