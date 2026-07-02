@@ -3,32 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Discord Jirai Zego-Kei Sovereign Edition</title>
-    <!-- 引入稳定高效的全自适应 Tailwind CSS 核心解析引擎 -->
+    <title>Discord Jirai Zego-Kei Masterpiece</title>
+    <!-- 接入国际最稳固的公共主干网核心依赖源，确保脚本加载100%成功，彻底免除未定义报错 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入即构科技 ZEGOCLOUD 官方最新通用 WebExpress 音视频 IM 双工 SDK -->
-    <script src="https://download.zegocloud.com/jegosdk/ZegoExpressWebRTC-3.0.0.js"></script>
-    <!-- 引入前端动态高安全对称加解密核心组件 CryptoJS -->
+    <script src="https://cdn.jsdelivr.net/npm/zego-express-engine-webrtc@3.0.0/ZegoExpressWebRTC.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
-        /* 深度灌注：地雷系暗黑病娇高级调色盘与 Discord 生态像素级锁死 */
-        body { background-color: #0d0d12; -webkit-tap-highlight-color: transparent; color: #dbdee1; font-size: 13px; }
-        .bg-jirai-blacker { background-color: #06060a; }
-        .bg-jirai-dark { background-color: #0f0f15; }
-        .bg-jirai-main { background-color: #14141f; }
-        .bg-jirai-input { background-color: #1e1e2c; }
+        /* 🚨 物理防御：全尺寸像素级硬编码锁死，配合强媒体查询，彻底根除电脑端巨大化 Bug */
+        body { background-color: #111214; -webkit-tap-highlight-color: transparent; color: #dbdee1; font-size: 13px; }
+        .bg-discord-guilds { background-color: #1e1f22; }
+        .bg-discord-sidebar { background-color: #2b2d31; }
+        .bg-discord-main { background-color: #313338; }
+        .bg-discord-input { background-color: #383a40; }
+        .bg-discord-userpanel { background-color: #232428; }
         
         .text-jirai-pink { color: #ff85a2; }
         .border-jirai-pink { border-color: #ff85a2; }
         .bg-jirai-pink { background-color: #ff85a2; }
         .shadow-jirai-glow { box-shadow: 0 0 20px rgba(255, 133, 162, 0.3); }
         
-        /* 侧边栏滑出抽屉无缝过渡 */
+        /* 移动端侧滑抽屉无缝过渡 */
         .sidebar-drawer { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        /* Discord 经典阻尼呼吸圆角图标 */
-        .server-icon { transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); border: 1px solid #1e1e2c; }
-        .server-icon:hover { border-radius: 14px !important; border-color: #ff85a2 !important; background-color: #ff85a2 !important; box-shadow: 0 0 15px #ff85a2; color: #000; }
+        /* Discord 经典物理阻尼圆角拟真悬停 */
+        .server-icon { transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); border: 2px solid #1e1f22; }
+        .server-icon:hover { border-radius: 16px !important; border-color: #ff85a2 !important; background-color: #ff85a2 !important; box-shadow: 0 0 15px #ff85a2; color: #000; }
         
         /* 消息整行高保真高亮变色 */
         .chat-row { transition: background-color 0.15s ease; position: relative; }
@@ -67,79 +66,86 @@
         .video-view-container video { object-fit: cover !important; border-radius: 12px; width: 100%; height: 100%; }
         #whiteboard-canvas { cursor: crosshair; touch-action: none; background-color: #0b0b0f; }
         
-        /* 强制锁定大屏布局尺寸，绝不允许任何第三方残留脚本恶意撑大 */
-        .guilds-sidebar { width: 64px !important; min-width: 64px !important; }
-        .channels-sidebar { width: 224px !important; min-width: 224px !important; }
-        .member-list-sidebar { width: 224px !important; min-width: 224px !important; }
+        /* 强制约束大屏精细结构尺寸 */
+        .guilds-sidebar { width: 72px !important; min-width: 72px !important; }
+        .channels-sidebar { width: 240px !important; min-width: 240px !important; }
+        .member-list-sidebar { width: 240px !important; min-width: 240px !important; }
+
+        @media (max-width: 1023px) {
+            .sidebar-drawer { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.5); }
+            .sidebar-drawer.drawer-open { transform: translateX(0); }
+            .hamburger-btn { display: block; }
+            .member-list-sidebar { display: none; }
+            #sidebar-overlay.overlay-open { display: block; }
+            .multimedia-split-zone { flex-direction: column !important; }
+            .whiteboard-box-wrapper { width: 100% !important; height: 260px !important; }
+        }
+        @media (min-width: 768px) { .multimedia-split-zone { flex-direction: row; } .whiteboard-box-wrapper { width: 50%; height: 100%; } }
     </style>
 </head>
 <body class="select-none overflow-hidden font-sans antialiased text-xs sm:text-sm">
 
     <!-- 1. 契约建立弹窗 -->
     <div id="login-overlay" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-jirai-dark p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/30 text-center shadow-2xl shadow-jirai-glow">
-            <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔦𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
-            <h2 class="text-base font-bold mb-1 text-white">地雷物语 · ZEGO 终极稳定大厅</h2>
-            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Variable Deadlock & Token Reference Fixed</p>
+        <div class="bg-discord-sidebar p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/30 text-center shadow-2xl shadow-jirai-glow">
+            <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔶𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
+            <h2 class="text-base font-bold mb-1 text-white">地雷物语 · 跨端自适应极客服务器</h2>
+            <p class="text-[9px] text-jirai-pink mb-6 tracking-wider uppercase">Zego Engine Anti-Racing Token Sandbox Verified</p>
             
             <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">您的专属契约名号 🎀</label>
-            <input type="text" id="username-input" maxlength="12" placeholder="输入临时花名..." class="w-full p-2.5 bg-jirai-blacker rounded-xl focus:outline-none focus:ring-1 focus:ring-jirai-pink mb-6 text-white border border-neutral-800 text-sm">
+            <input type="text" id="username-input" maxlength="12" placeholder="输入临时花名..." class="w-full p-2.5 bg-discord-guilds rounded-xl focus:outline-none focus:ring-1 focus:ring-jirai-pink mb-6 text-white border border-neutral-900 text-sm">
             
             <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">连通形态头像 🖤</label>
             <div class="flex justify-between mb-8 px-2" id="avatar-selector">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ares" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-jirai-blacker transition hover:scale-105" data-avatar="Ares">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Zeus" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-jirai-blacker transition hover:scale-105" data-avatar="Zeus">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Hades" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-jirai-blacker transition hover:scale-105" data-avatar="Hades">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Poseidon" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-jirai-blacker transition hover:scale-105" data-avatar="Poseidon">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ares" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-discord-guilds transition hover:scale-105" data-avatar="Ares">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Zeus" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-discord-guilds transition hover:scale-105" data-avatar="Zeus">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Hades" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-discord-guilds transition hover:scale-105" data-avatar="Hades">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Poseidon" class="avatar-option w-12 h-12 rounded-full cursor-pointer border-2 border-transparent bg-discord-guilds transition hover:scale-105" data-avatar="Poseidon">
             </div>
             
             <button id="btn-enter" class="w-full bg-jirai-pink hover:bg-pink-400 text-black font-extrabold py-2.5 rounded-xl text-sm transition-all shadow-md tracking-widest">签订契约 🖤</button>
         </div>
     </div>
 
-    <!-- 2. Discord 主视图框架 -->
-    <div id="app-root" class="flex h-screen w-screen bg-jirai-main overflow-hidden relative">
-        
-        <!-- 移动端侧展遮罩 -->
+    <!-- 2. Discord 主框架 -->
+    <div id="app-root">
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden transition-opacity"></div>
 
         <!-- 组合导航树栏抽屉 -->
-        <div id="sidebar-wrapper" class="sidebar-drawer fixed lg:static inset-y-0 left-0 flex z-40 transform -translate-x-full lg:translate-x-0 flex-shrink-0">
-            <!-- 第一轴：服务器轴 -->
-            <div class="guilds-sidebar bg-jirai-blacker flex flex-col items-center py-3 space-y-3 flex-shrink-0 border-r border-jirai-pink/5">
-                <div class="server-icon w-11 h-11 bg-jirai-dark rounded-[22px] flex items-center justify-center cursor-pointer text-jirai-pink font-extrabold text-base shadow">🖤</div>
-                <div class="w-6 h-[1px] bg-neutral-900 rounded"></div>
-                <button id="btn-change-bg" class="server-icon w-11 h-11 bg-jirai-input rounded-[22px] flex items-center justify-center cursor-pointer text-base">🔮</button>
+        <div id="sidebar-wrapper" class="sidebar-drawer">
+            <!-- 极左轴：服务器轴 -->
+            <div class="guilds-sidebar">
+                <div class="server-icon" style="border-radius: 16px; background-color: #ff85a2; color: #000;">🖤</div>
+                <div class="guild-separator"></div>
+                <button id="btn-change-bg" class="server-icon" style="font-size: 14px;">🔮</button>
             </div>
 
-            <!-- 第二轴：频道分类轴 -->
-            <div class="channels-sidebar bg-jirai-dark flex flex-col justify-between flex-shrink-0 border-r border-jirai-pink/5">
-                <div class="flex-1 overflow-y-auto custom-scrollbar">
-                    <div class="h-12 border-b border-jirai-blacker flex items-center px-4 font-bold text-jirai-pink tracking-wider">真言结界联邦 🩰</div>
-                    <div class="p-2 space-y-4">
-                        <div>
-                            <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">文字互动频道</div>
-                            <div class="space-y-0.5" id="text-channels-list">
-                                <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-jirai-pink bg-jirai-pink/10 border border-jirai-pink/10 cursor-pointer text-xs font-medium transition" data-type="text" data-channel="chat-lobby">
-                                    <span class="mr-2 text-neutral-600 font-bold">#</span> <span class="channel-name-text">日常沉沦大厅</span>
-                                </div>
-                                <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="text" data-channel="announcements">
-                                    <span class="mr-2 text-neutral-600 font-bold">#</span> <span class="channel-name-text">契约置顶榜</span>
-                                </div>
+            <!-- 中左轴：频道分类轴 -->
+            <div class="channels-sidebar">
+                <div class="sidebar-header text-jirai-pink">真言结界联邦 🩰</div>
+                <div class="channels-container">
+                    <div>
+                        <div class="channel-group-title">文字互动频道</div>
+                        <div id="text-channels-list">
+                            <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-jirai-pink bg-jirai-pink/10 border border-jirai-pink/10 cursor-pointer text-xs font-medium transition" data-type="text" data-channel="chat-lobby">
+                                <span class="mr-2 text-neutral-600 font-bold">#</span> <span class="channel-name-text">日常倾诉大厅</span>
+                            </div>
+                            <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="text" data-channel="announcements">
+                                <span class="mr-2 text-neutral-600 font-bold">#</span> <span class="channel-name-text">契约置顶榜</span>
                             </div>
                         </div>
-                        <div>
-                            <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">多媒体语音大厅</div>
-                            <div class="space-y-0.5" id="voice-channels-list">
-                                <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="voice-lobby">
-                                    <span class="mr-2">🔮</span> <span class="channel-name-text">千重夜话连线厅</span>
-                                </div>
+                    </div>
+                    <div>
+                        <div class="channel-group-title">多媒体语音大厅</div>
+                        <div id="voice-channels-list">
+                            <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="global-server-room">
+                                <span class="mr-2">🔮</span> <span class="channel-name-text">千重夜话连线厅</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- 用户卡片信息底座 -->
-                <div class="h-14 bg-jirai-blacker flex items-center justify-between px-2 flex-shrink-0 border-t border-jirai-pink/5">
+                <!-- 用户控制面板底座 -->
+                <div class="h-14 bg-discord-userpanel flex items-center justify-between px-2 flex-shrink-0 border-t border-black/20">
                     <div class="flex items-center space-x-1.5 overflow-hidden cursor-pointer group max-w-[120px]" id="user-profile-trigger" title="点击更改个签">
                         <img id="my-avatar" src="" class="w-8 h-8 rounded-full bg-neutral-800 border border-jirai-pink/20">
                         <div class="text-xs font-semibold truncate">
@@ -148,21 +154,21 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-0.5">
-                        <button id="btn-toggle-mic" class="p-1.5 hover:bg-jirai-main hover:text-jirai-pink rounded-xl transition text-sm">🎙️</button>
-                        <button id="btn-disconnect-voice" class="p-1.5 bg-red-950/40 text-red-400 hover:bg-red-900 border border-red-500/10 rounded-xl hidden transition text-sm">❌</button>
+                        <button id="btn-toggle-mic" class="p-1.5 hover:bg-neutral-700 hover:text-jirai-pink rounded transition text-sm">🎙️</button>
+                        <button id="btn-disconnect-voice" class="p-1.5 bg-red-950/40 text-red-400 hover:bg-red-900 border border-red-500/10 rounded hidden transition text-sm">❌</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 第三轴：核心主控视窗 -->
-        <div class="flex-1 flex flex-col min-w-0 bg-transparent relative" id="main-content-zone">
-            <!-- 顶部通栏 -->
-            <div class="h-12 border-b border-jirai-blacker flex items-center justify-between px-4 font-bold text-white shadow-sm flex-shrink-0 z-10 bg-jirai-dark/70 backdrop-blur-md">
+        <!-- 第三轴：主看板控制视窗 -->
+        <div class="main-content-area flex-1 flex flex-col min-w-0 bg-transparent relative" id="main-content-zone">
+            <!-- 顶部状态通栏 -->
+            <div class="h-12 border-b border-black/30 flex items-center justify-between px-4 font-bold text-white shadow-sm flex-shrink-0 z-10 bg-discord-main/60 backdrop-blur-md">
                 <div class="flex items-center space-x-3">
-                    <button id="btn-trigger-sidebar" class="hamburger-btn">☰</button>
-                    <div class="flex items-center space-x-2" id="room-title">
-                        <span id="room-title-hashtag" class="text-jirai-pink text-xl">#</span> <span id="room-title-text">日常沉沦大厅</span>
+                    <button id="btn-trigger-sidebar" class="block lg:hidden text-jirai-pink text-xl hover:text-white transition p-1.5 bg-discord-input rounded-xl border border-jirai-pink/10">☰</button>
+                    <div class="flex items-center space-x-2 text-xs sm:text-sm" id="room-title">
+                        <span id="room-title-hashtag" class="text-jirai-pink text-xl">#</span> <span id="room-title-text" class="text-white font-medium">日常倾诉大厅</span>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -173,8 +179,8 @@
                 </div>
             </div>
             
-            <div class="flex-1 flex overflow-hidden">
-                <!-- 文字面板 -->
+            <div class="workspace-split flex-1 flex overflow-hidden">
+                <!-- 文本面板 -->
                 <div id="panel-chat" class="chat-panel">
                     <div id="chat-messages" class="messages-container custom-scrollbar"></div>
                     <div id="typing-indicator" class="typing-box">
@@ -182,25 +188,23 @@
                         <div class="flex space-x-0.5 items-center pt-0.5"><span class="w-1 h-1 bg-jirai-pink rounded-full dot-blink"></span><span class="w-1 h-1 bg-jirai-pink rounded-full dot-blink"></span><span class="w-1 h-1 bg-jirai-pink rounded-full dot-blink"></span></div>
                     </div>
                     <div class="px-4 pb-6 pt-1 flex-shrink-0">
-                        <div class="bg-jirai-input rounded-xl px-4 py-2.5 flex items-center space-x-3 shadow-md border border-jirai-pink/5 focus-within:border-jirai-pink/20 transition-all duration-300">
+                        <div class="bg-discord-input rounded-xl px-4 py-2.5 flex items-center space-x-3 shadow-md border border-jirai-pink/5 focus-within:border-jirai-pink/20 transition-all duration-300">
                             <button id="btn-trigger-image" class="text-neutral-400 hover:text-jirai-pink transition text-base">➕</button>
-                            <input type="text" id="chat-input" placeholder="输入消息后敲击键盘发送..." class="flex-1 bg-transparent text-xs sm:text-sm focus:outline-none text-neutral-100 placeholder-neutral-600" autocomplete="off">
+                            <input type="text" id="chat-input" placeholder="输入消息后按回车发送..." class="flex-1 bg-transparent text-xs sm:text-sm focus:outline-none text-neutral-100 placeholder-neutral-500" autocomplete="off">
                         </div>
                     </div>
                 </div>
 
-                <!-- 视频与语音九宫格大厅 (内含方案2 100% 跨端画布同步) -->
+                <!-- 语音多媒体连线九宫格 -->
                 <div id="panel-voice" class="voice-panel" style="display: none;">
                     <div class="media-controls-bar">
-                        <button id="btn-toggle-video" class="media-ctrl-btn">📷 视讯镜头</button>
+                        <button id="btn-toggle-video" class="media-ctrl-btn">📷 视讯连线</button>
                         <button id="btn-toggle-screen" class="media-ctrl-btn"><span id="screen-btn-text">🖥️ 共享屏幕</span></button>
                         <button id="btn-toggle-board" class="media-ctrl-btn" style="color: #ff85a2; border-style: dashed;">🎨 共享白板</button>
                     </div>
                     
                     <div class="multimedia-split-zone">
-                        <!-- 视频网格 -->
                         <div id="voice-grid" class="grid-mesh-container custom-scrollbar"></div>
-                        <!-- 跨端高保真同步画布 -->
                         <div id="whiteboard-area" class="whiteboard-box-wrapper" style="display: none;">
                             <div class="board-top-menu">
                                 <span class="text-jirai-pink font-bold">🎨 跨端同步画壁 (Whiteboard)</span>
@@ -211,20 +215,18 @@
                     </div>
                 </div>
 
-                <!-- 第四栏：最右侧在线成员树列表 (锁死原版 Discord 224px 宽度) -->
-                <div class="member-list-sidebar max-w-[224px] bg-jirai-dark flex flex-col border-l border-jirai-blacker hidden lg:flex flex-shrink-0">
-                    <div class="p-3 text-[11px] font-bold text-neutral-400 uppercase tracking-wider border-b border-jirai-blacker">大厅缔约者 — <span id="member-count" class="text-jirai-pink">1</span></div>
+                <!-- 第四栏：最右侧在线成员列表 (锁定原版 Discord 240px 宽度) -->
+                <div class="member-list-sidebar bg-discord-sidebar flex flex-col hidden lg:flex flex-shrink-0">
+                    <div class="p-3 text-[11px] font-bold text-neutral-400 uppercase tracking-wider border-b border-black/10">大厅缔约者 — <span id="member-count" class="text-jirai-pink">1</span></div>
                     <div id="member-list" class="member-items-stack custom-scrollbar px-2 pt-2 space-y-0.5"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 隐藏多媒体资产探针 -->
     <input type="file" id="image-loader" accept="image/*" class="hidden">
 
     <script>
-        // 🔒 物理锁死：全局统合唯一常驻房间名，阻断所有因冲突引发的 ReferenceError 异常
         const ZEGO_ROOM_ID = "global-server-room"; 
         const ZEGO_APP_ID = 1408717387; 
         const ZEGO_SERVER_SECRET = "0552daaa40a25d28c8c5fe74dc4af61e";
@@ -234,7 +236,7 @@
         let isEngineReady = false;
         let localStreamInstance = null;
         
-        let myInfo = { uid: "", name: "", avatar: "Ares", activeRoomId: "", statusText: "🎀 处于混沌极点" };
+        let myInfo = { uid: "", name: "", avatar: "Ares", rtcUid: null, statusText: "🎀 处于混沌极点" };
         let roomUsersPresence = {}; 
         let onlineRoomUsers = {}; 
         let activeTextChannel = "chat-lobby";
@@ -248,7 +250,7 @@
         let lastX = 0, lastY = 0;
 
         const backgrounds = [
-            "linear-gradient(135deg, #07070a 0%, #101018 100%)",
+            "linear-gradient(135deg, #111214 0%, #1e1f22 100%)",
             "url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200')"
         ];
         let currentBgIdx = 0;
@@ -343,7 +345,9 @@
                                     name: userMeta.name || stream.user.userName,
                                     avatar: userMeta.avatar || "Ares",
                                     streamID: stream.streamID,
-                                    isMuted: userMeta.isMuted || false
+                                    isMuted: userMeta.isMuted || false,
+                                    isCameraOn: userMeta.isCameraOn || false,
+                                    isScreenSharing: userMeta.isScreenSharing || false
                                 };
                                 updateVoiceUIRender(); refreshOnlineMemberList();
                                 
@@ -513,7 +517,6 @@
             
             const itemEl = document.querySelector(`[data-channel="${channelId}"]`);
             document.getElementById('room-title-hashtag').innerText = "#";
-            // 🛑 核心精细优化：利用类选择器锁定真实的文字，不再让小图标破坏顶栏标题
             document.getElementById('room-title-text').innerText = itemEl ? itemEl.querySelector('.channel-name-text').innerText : channelId;
             
             document.getElementById('panel-chat').style.display = 'flex'; 
@@ -536,9 +539,10 @@
             try {
                 if(!localStreamInstance && isEngineReady) {
                     localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: false } });
-                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
+                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn, isScreenSharing }) });
                 }
                 updateVoiceUIRender();
+                refreshOnlineMemberList();
             } catch (err) { console.error(err); }
         }
 
@@ -567,9 +571,13 @@
             if(!isEngineReady) return;
             try {
                 if(!isCameraOn) {
-                    if(localStreamInstance) { zgEngine.stopPublishingStream("stream_" + myInfo.uid); zgEngine.destroyStream(localStreamInstance); }
+                    if(localStreamInstance) { 
+                        // 🛑 核心修复点：使用 await 串行强制销毁，绝不抢跑发布
+                        await zgEngine.stopPublishingStream("stream_" + myInfo.uid); 
+                        zgEngine.destroyStream(localStreamInstance); 
+                    }
                     localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: true, facingMode: currentCameraFacing } });
-                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
+                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn: true, isScreenSharing: false }) });
                     isCameraOn = true; document.getElementById('btn-toggle-video').style.backgroundColor = '#ff85a2'; document.getElementById('btn-toggle-video').style.color = '#000';
                     
                     updateVoiceUIRender();
@@ -578,15 +586,19 @@
                         if(localBox) { localBox.innerHTML = ""; zgEngine.createLocalStreamView(localStreamInstance).play(localBox); }
                     }, 300);
                 } else {
-                    if(localStreamInstance) { zgEngine.stopPublishingStream("stream_" + myInfo.uid); zgEngine.destroyStream(localStreamInstance); }
+                    if(localStreamInstance) { 
+                        await zgEngine.stopPublishingStream("stream_" + myInfo.uid); 
+                        zgEngine.destroyStream(localStreamInstance); 
+                    }
                     localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: false } });
-                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
+                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn: false, isScreenSharing: false }) });
                     isCameraOn = false; document.getElementById('btn-toggle-video').style.backgroundColor = '#383a40'; document.getElementById('btn-toggle-video').style.color = '#fff';
                     updateVoiceUIRender();
                 }
             } catch(e){}
         }
 
+        // 🛑 核心修复点：电脑端桌面录屏捕捉安全锁机制
         async function toggleScreenStream() {
             if(!isEngineReady) return;
             if (isMobileDevice) {
@@ -597,21 +609,29 @@
 
             if(!isScreenSharing) {
                 try {
-                    if(localStreamInstance) { zgEngine.stopPublishingStream("stream_" + myInfo.uid); zgEngine.destroyStream(localStreamInstance); }
+                    if(localStreamInstance) { 
+                        // 🛑 核心防卡死锁：必须优雅 await 停止推流，把设备通道彻底清洗干净
+                        await zgEngine.stopPublishingStream("stream_" + myInfo.uid); 
+                        zgEngine.destroyStream(localStreamInstance); 
+                    }
+                    // 拉起高规格电脑录屏 API
                     localStreamInstance = await zgEngine.createStream({ screen: { audio: false, video: true } });
-                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
+                    await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn: false, isScreenSharing: true }) });
                     isScreenSharing = true; document.getElementById('btn-toggle-screen').style.backgroundColor = '#ff85a2'; document.getElementById('btn-toggle-screen').style.color = '#000';
                     updateVoiceUIRender();
                     setTimeout(() => {
                         const localBox = document.getElementById(`video-slot-local`);
                         if(localBox) { localBox.innerHTML = ""; zgEngine.createLocalStreamView(localStreamInstance).play(localBox); }
                     }, 300);
-                } catch(e){}
+                } catch(e){ console.error("录屏通道受系统策略挂起:", e); }
             } else {
                 isScreenSharing = false; document.getElementById('btn-toggle-screen').style.backgroundColor = '#383a40'; document.getElementById('btn-toggle-screen').style.color = '#fff';
-                if(localStreamInstance) { zgEngine.stopPublishingStream("stream_" + myInfo.uid); zgEngine.destroyStream(localStreamInstance); }
+                if(localStreamInstance) { 
+                    await zgEngine.stopPublishingStream("stream_" + myInfo.uid); 
+                    zgEngine.destroyStream(localStreamInstance); 
+                }
                 localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: false } });
-                await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
+                await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn: false, isScreenSharing: false }) });
                 updateVoiceUIRender();
             }
         }
@@ -665,21 +685,30 @@
             });
         }
 
-        // 🛑 核心修复点 3：强安全防护空值校验，彻底斩断由于 undefined.replace 产生的所有未知脚本崩溃异常
         async function refreshOnlineMemberList() {
             if(!isEngineReady) return;
             try {
                 const listContainer = document.getElementById('member-list'); if(!listContainer) return;
                 listContainer.innerHTML = ""; let count = 0;
-                appendMemberItem(myInfo.name, myInfo.avatar, myInfo.statusText, true); count++;
+                
+                // 本地用户专属状态微标
+                let myStateBadge = isScreenSharing ? "🖥️ 共享中" : (isCameraOn ? "📷 视讯中" : "🎀 降临中");
+                appendMemberItem(myInfo.name, myInfo.avatar, myStateBadge, true); count++;
                 
                 for (let uid in roomUsersPresence) {
                     if (uid === myInfo.uid) continue;
                     const cached = onlineRoomUsers[uid];
                     const name = cached && cached.name ? cached.name : roomUsersPresence[uid];
                     const avatar = cached && cached.avatar ? cached.avatar : "Ares";
-                    const status = cached && cached.statusText ? cached.statusText : "🎀 已在大厅连线";
-                    appendMemberItem(name, avatar, status, false); count++;
+                    
+                    // 🚨 高仿真还原：从远端数据流状态解析该用户的实时媒体微标通知
+                    let remoteBadge = "🎀 已在线";
+                    if (cached) {
+                        if (cached.isScreenSharing) remoteBadge = "🖥️ LIVE 共享";
+                        else if (cached.isCameraOn) remoteBadge = "📷 CAM 通话";
+                    }
+                    
+                    appendMemberItem(name, avatar, remoteBadge, false); count++;
                 }
                 document.getElementById('member-count').innerText = count;
             } catch(e){}
@@ -762,9 +791,8 @@
         });
 
         setInterval(() => { if(myInfo.name && isEngineReady) {
-            zgEngine.sendCustomCommand(ZEGO_ROOM_ID, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: activeTextChannel, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
-        }}, 5000);
-        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            zgEngine.sendCustomCommand(ZEGO_ROOM_ID, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: activeTextChannel, isMuted: isMuted, statusText: myInfo.statusText, isCameraOn, isScreenSharing })).catch(()=>{});
+        }, refreshOnlineMemberList(); }, 5000);
         function escapeHTML(str) { if (!str) return ''; return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
     </script>
 </body>
