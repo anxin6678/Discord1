@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Discord Jirai Zego-Kei Sovereign Masterpiece</title>
-    <!-- 引入自适应 Tailwind CSS 核心样式解析引擎 -->
+    <title>Discord Jirai Zego-Kei Masterpiece v4</title>
+    <!-- 引入自适应 Tailwind CSS 核心解析引擎 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 回归即构官方高稳固通用 WebExpress 音视频 IM 双工 SDK -->
-    <script src="https://download.zegocloud.com/jegosdk/ZegoExpressWebRTC-3.0.0.js"></script>
+    <!-- 引入即构科技 ZEGOCLOUD 官方最新通用 WebExpress 音视频 IM 双工 SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/zego-express-engine-webrtc@3.0.0/ZegoExpressWebRTC.js"></script>
     <!-- 引入安全加解密组件 CryptoJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
@@ -38,14 +38,22 @@
         
         /* 消息整行原厂视觉高亮 */
         .chat-row { transition: background-color 0.15s ease; position: relative; }
-        .chat-row:hover { background-color: rgba(0, 0, 0, 0.05); }
+        .chat-row:hover { background-color: rgba(255, 133, 162, 0.05); }
         .chat-row .msg-actions { opacity: 0; transition: opacity 0.1s ease; }
         .chat-row:hover .msg-actions { opacity: 1; }
         
-        /* 说话时粉红霓虹光环 */
+        /* Discord 高仿真提及高亮 */
+        .chat-row.mention-row { background-color: rgba(240, 178, 50, 0.08) !important; border-left: 3px solid #f0b232; }
+        .chat-row.mention-row:hover { background-color: rgba(240, 178, 50, 0.12) !important; }
+        .mention-badge { background-color: rgba(88, 101, 242, 0.3); color: #fff; padding: 0 4px; border-radius: 3px; font-weight: 500; }
+
+        /* Discord 标准行内代码样式 */
+        .discord-inline-code { background-color: #1e1f22; color: #e32626; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 12px; }
+
+        /* 通话高亮 */
         .is-speaking { border-color: #ff85a2 !important; box-shadow: 0 0 18px #ff85a2 !important; }
         
-        /* 精致自适应定制滚动条 */
+        /* 定制美化滚动条 */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0f0f15; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff85a2; border-radius: 10px; }
@@ -72,7 +80,7 @@
 </head>
 <body class="select-none overflow-hidden font-sans antialiased text-xs sm:text-sm">
 
-    <!-- 🚨 核心畅联重塑：物理级网页根节点隐形媒体音频池，保证切换到任何文本频道声音都绝对不断联挂起 -->
+    <!-- 网页根节点隐形媒体音频池，保证切换到任何文本频道声音都绝对不断联挂起 -->
     <div id="global-media-pool" style="display: none; position: absolute; width: 1px; height: 1px; overflow: hidden;"></div>
 
     <!-- 1. 首次入站身份契约建立弹窗 -->
@@ -80,7 +88,7 @@
         <div class="bg-discord-sidebar p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/30 text-center shadow-2xl shadow-jirai-glow">
             <div class="text-3xl mb-1 tracking-widest">🖤 专 属 结 界 🖤</div>
             <h2 class="text-base font-bold mb-1 text-white">地雷物语 · 空间自适应大厅</h2>
-            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Global Media Pool & Broadcast Sync Deployed</p>
+            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Discord Native Markdown Format Compiled</p>
             
             <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">您的专属名号 🎀</label>
             <input type="text" id="username-input" maxlength="12" placeholder="输入进入结界的花名..." class="w-full p-2.5 bg-discord-guilds rounded-xl focus:outline-none focus:ring-1 focus:ring-jirai-pink mb-6 text-white border border-neutral-800 text-sm">
@@ -129,8 +137,8 @@
         <div id="sidebar-wrapper" class="sidebar-drawer fixed lg:static inset-y-0 left-0 flex z-40 transform -translate-x-full lg:translate-x-0 flex-shrink-0">
             <!-- 极左：服务器轴 -->
             <div class="guilds-sidebar bg-discord-guilds flex flex-col items-center py-3 space-y-3 flex-shrink-0 border-r border-black/10">
-                <div class="server-icon" style="border-radius: 16px; background-color: #ff85a2; color: #000;">🖤</div>
-                <div class="guild-separator"></div>
+                <div class="server-icon flex items-center justify-center cursor-pointer text-jirai-pink font-extrabold text-base shadow" style="border-radius: 16px; background-color: #ff85a2; color: #000;">🖤</div>
+                <div class="w-6 h-[1px] bg-neutral-800 rounded"></div>
                 <button id="btn-change-bg" class="server-icon w-11 h-11 bg-discord-input rounded-[22px] flex items-center justify-center cursor-pointer text-base">🔮</button>
             </div>
 
@@ -140,7 +148,7 @@
                     <div class="h-12 border-b border-discord-guilds flex items-center px-4 font-bold text-jirai-pink tracking-wider">真言结界联邦 🩰</div>
                     <div class="p-2 space-y-4">
                         <div>
-                            <div class="text-[10px] font-bold text-neutral-500 px-2 mb-1.5 uppercase tracking-wider">文字互动频道</div>
+                            <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">文字互动频道</div>
                             <div id="text-channels-list" class="space-y-0.5">
                                 <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-jirai-pink bg-jirai-pink/10 border border-jirai-pink/10 cursor-pointer text-xs font-medium transition active" data-type="text" data-channel="chat-lobby">
                                     <span class="mr-2 text-neutral-600 font-bold">#</span> <span class="channel-name-text">日常倾诉大厅</span>
@@ -151,7 +159,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="text-[10px] font-bold text-neutral-500 px-2 mb-1.5 uppercase tracking-wider">多媒体语音大厅</div>
+                            <div class="text-[10px] font-bold text-neutral-400 px-2 mb-1.5 uppercase tracking-wider">多媒体语音大厅</div>
                             <div id="voice-channels-list" class="space-y-0.5">
                                 <div class="channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-neutral-700/30 hover:text-gray-200 cursor-pointer text-xs transition" data-type="voice" data-channel="global-server-room">
                                     <span class="mr-2">🔮</span> <span class="channel-name-text">千重夜话连线厅</span>
@@ -205,17 +213,30 @@
                     <div class="px-4 pb-6 pt-1 flex-shrink-0">
                         <div class="bg-discord-input rounded-xl px-4 py-2.5 flex items-center space-x-3 shadow-md border border-jirai-pink/5 focus-within:border-jirai-pink/20 transition-all duration-300">
                             <button id="btn-trigger-image" class="text-neutral-400 hover:text-jirai-pink transition text-base">➕</button>
-                            <input type="text" id="chat-input" placeholder="输入消息后按回车发送（输入 /jirai 有彩蛋）..." class="flex-1 bg-transparent text-xs sm:text-sm focus:outline-none text-neutral-100 placeholder-neutral-500" autocomplete="off">
+                            <input type="text" id="chat-input" placeholder="输入消息后按回车发送（试试 **粗体** 或 `代码`）..." class="flex-1 bg-transparent text-xs sm:text-sm focus:outline-none text-neutral-100 placeholder-neutral-500" autocomplete="off">
                         </div>
                     </div>
                 </div>
 
                 <!-- 语音多媒体连线九宫格大厅 -->
                 <div id="panel-voice" class="voice-panel flex-1 p-3 flex flex-col bg-black/20 overflow-hidden" style="display: none;">
-                    <div class="media-controls-bar bg-discord-sidebar rounded-xl flex justify-center gap-4 flex-shrink-0 p-2 border border-jirai-pink/10 shadow-lg">
-                        <button id="btn-toggle-video" class="media-ctrl-btn">📷 视讯连线</button>
-                        <button id="btn-toggle-screen" class="media-ctrl-btn"><span id="screen-btn-text">🖥️ 共享屏幕</span></button>
-                        <button id="btn-toggle-board" class="media-ctrl-btn" style="color: #ff85a2; border-style: dashed;">🎨 共享白板</button>
+                    <div class="media-controls-bar bg-discord-sidebar rounded-xl flex items-center justify-between gap-2 flex-shrink-0 p-2 border border-jirai-pink/10 shadow-lg">
+                        <div class="flex space-x-2">
+                            <button id="btn-toggle-video" class="media-ctrl-btn">📷 视讯连线</button>
+                            <button id="btn-toggle-screen" class="media-ctrl-btn"><span id="screen-btn-text">🖥️ 共享屏幕</span></button>
+                            <button id="btn-toggle-board" class="media-ctrl-btn" style="color: #ff85a2; border-style: dashed;">🎨 共享白板</button>
+                        </div>
+                        <!-- 🚨 新增：可调节的高级白板控制组件盘 -->
+                        <div id="board-palette" class="flex items-center space-x-2 bg-discord-guilds/80 px-2 py-1 rounded-md" style="display: none;">
+                            <button class="w-4 h-4 rounded-full border border-white" style="background-color: #ff85a2;" onclick="changeBrushColor('#ff85a2')"></button>
+                            <button class="w-4 h-4 rounded-full border border-transparent" style="background-color: #5865f2;" onclick="changeBrushColor('#5865f2')"></button>
+                            <button class="w-4 h-4 rounded-full border border-transparent" style="background-color: #23a55a;" onclick="changeBrushColor('#23a55a')"></button>
+                            <select id="brush-size-select" class="bg-discord-input text-[10px] text-white rounded outline-none p-0.5 border border-neutral-700" onchange="changeBrushSize(this.value)">
+                                <option value="3">3px</option>
+                                <option value="5">5px</option>
+                                <option value="8">8px</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <div class="multimedia-split-zone flex-1 flex flex-col md:flex-row gap-3 overflow-hidden mt-3">
@@ -260,6 +281,10 @@
         let currentCameraFacing = "user"; 
         let typingTimeout = null;
 
+        // 白板画笔状态机
+        let currentBrushColor = "#ff85a2";
+        let currentBrushSize = 3;
+
         const canvas = document.getElementById('whiteboard-canvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
@@ -271,6 +296,7 @@
         ];
         let currentBgIdx = 0;
 
+        // 导航控制
         const btnSidebar = document.getElementById('btn-trigger-sidebar');
         const sidebarWrapper = document.getElementById('sidebar-wrapper');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -403,7 +429,6 @@
                                 };
                                 updateVoiceUIRender(); refreshOnlineMemberList();
                                 
-                                // 🚨 核心畅连修复：将远端音视频轨直接无缝外挂挂载到网页根级永驻隐形池里，打破隐藏 DOM 静音枷锁
                                 const mediaPool = document.getElementById('global-media-pool');
                                 if (mediaPool && remoteStream) {
                                     const poolVideo = document.getElementById(`pool-video-${stream.streamID}`) || document.createElement('video');
@@ -422,7 +447,7 @@
                                         videoElement.srcObject = remoteStream;
                                         videoElement.autoplay = true;
                                         videoElement.playsInline = true;
-                                        videoElement.muted = true; // 根部已有声音，格阵内强制静音防回音爆音
+                                        videoElement.muted = true; 
                                         videoElement.style.width = "100%";
                                         videoElement.style.height = "100%";
                                         videoElement.style.objectFit = "cover";
@@ -461,9 +486,9 @@
                                 return;
                             }
 
-                            // 🚨 共享白板彻底跑通修复：解除 UI 开闭拦截，走最高优先级的全网广播管道异步绘制本地画布
+                            // 🚨 核心流隔离修复：白板轨迹数据移入专属定制字段，绝不干扰普通聊天
                             if(data.type === "DRAW_PATH") {
-                                drawLocalLine(data.x1 * canvas.width, data.y1 * canvas.height, data.x2 * canvas.width, data.y2 * canvas.height, false);
+                                drawLocalLine(data.x1 * canvas.width, data.y1 * canvas.height, data.x2 * canvas.width, data.y2 * canvas.height, false, data.color, data.size);
                                 return;
                             }
                             if(data.type === "CLEAR_BOARD") {
@@ -596,6 +621,21 @@
                     await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn: true, isScreenSharing: false }) });
                     isCameraOn = true; document.getElementById('btn-toggle-video').style.backgroundColor = '#ff85a2'; document.getElementById('btn-toggle-video').style.color = '#000';
                     updateVoiceUIRender();
+                    setTimeout(() => {
+                        const box = document.getElementById(`video-slot-local`);
+                        if(box && localStreamInstance) { 
+                            box.innerHTML = ""; 
+                            const videoElement = document.createElement('video');
+                            videoElement.srcObject = (typeof localStreamInstance.getMediaStream === 'function') ? localStreamInstance.getMediaStream() : localStreamInstance;
+                            videoElement.autoplay = true;
+                            videoElement.playsInline = true;
+                            videoElement.muted = true; 
+                            videoElement.style.width = "100%";
+                            videoElement.style.height = "100%";
+                            videoElement.style.objectFit = "cover";
+                            box.appendChild(videoElement);
+                        }
+                    }, 200);
                 } else {
                     if(localStreamInstance) { await zgEngine.stopPublishingStream("stream_" + myInfo.uid); await zgEngine.destroyStream(localStreamInstance); }
                     localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: false } });
@@ -607,7 +647,6 @@
             isHardwareLock = false;
         }
 
-        // 🚨 屏幕共享全面修复：剥离非法混合键配置语法，采用独立捕获与轨道动态组装混音方案
         async function toggleScreenStream() {
             if(!isEngineReady || isHardwareLock) return;
             if (isMobileDevice) {
@@ -624,22 +663,30 @@
                         await zgEngine.destroyStream(localStreamInstance); 
                         localStreamInstance = null;
                     }
-                    // 1. 标准合规即构专属录屏流参数抓取
-                    localStreamInstance = await zgEngine.createStream({ screen: { video: true } });
-                    
-                    // 2. 原生注入本地麦克风轨道，保证共享大厅演示时声音绝对通畅不失音
-                    try {
-                        const micAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                        if(micAudioStream && micAudioStream.getAudioTracks().length > 0) {
-                            localStreamInstance.addTrack(micAudioStream.getAudioTracks()[0]);
-                        }
-                    } catch(exMic){}
-
+                    localStreamInstance = await zgEngine.createStream({ 
+                        screen: { video: true, audio: false },
+                        camera: { audio: true, video: false }
+                    });
                     await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn: false, isScreenSharing: true }) });
                     isScreenSharing = true; 
                     document.getElementById('btn-toggle-screen').style.backgroundColor = '#ff85a2'; 
                     document.getElementById('btn-toggle-screen').style.color = '#000';
                     updateVoiceUIRender();
+                    setTimeout(() => {
+                        const box = document.getElementById(`video-slot-local`);
+                        if(box && localStreamInstance) { 
+                            box.innerHTML = ""; 
+                            const videoElement = document.createElement('video');
+                            videoElement.srcObject = (typeof localStreamInstance.getMediaStream === 'function') ? localStreamInstance.getMediaStream() : localStreamInstance;
+                            videoElement.autoplay = true;
+                            videoElement.playsInline = true;
+                            videoElement.muted = true; 
+                            videoElement.style.width = "100%";
+                            videoElement.style.height = "100%";
+                            videoElement.style.objectFit = "cover";
+                            box.appendChild(videoElement);
+                        }
+                    }, 200);
                 } else {
                     isScreenSharing = false; 
                     document.getElementById('btn-toggle-screen').style.backgroundColor = '#383a40'; 
@@ -717,20 +764,7 @@
             container.appendChild(card);
         }
 
-        // 🚨 白板信令重构：改走 IM 最高优先级全网广播大底座，摆脱 sendCustomCommand 方向约束
-        function drawLocalLine(x1, y1, x2, y2, emitBroadcast = true) {
-            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-            if(emitBroadcast && isEngineReady) {
-                zgEngine.sendBroadcastMessage(ZEGO_ROOM_ID, JSON.stringify({ type: "DRAW_PATH", x1: x1 / canvas.width, y1: y1 / canvas.height, x2: x2 / canvas.width, y2: y2 / canvas.height })).catch(()=>{});
-            }
-        }
-
-        document.getElementById('btn-clear-board').addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if(isEngineReady) zgEngine.sendBroadcastMessage(ZEGO_ROOM_ID, JSON.stringify({ type: "CLEAR_BOARD" })).catch(()=>{});
-        });
-
-        // 麦克风对齐 Stream ID 字符串切换
+        // 麦克风对齐
         document.getElementById('btn-toggle-mic').addEventListener('click', async () => {
             isMuted = !isMuted; 
             if(isEngineReady && localStreamInstance) {
@@ -745,7 +779,6 @@
             broadcastUserInfo(); updateVoiceUIRender();
         });
 
-        // 其余常规逻辑组件绑定
         const chatInputEvent = document.getElementById('chat-input');
         if(chatInputEvent) {
             chatInputEvent.addEventListener('keydown', function(e) {
@@ -774,11 +807,116 @@
             if(isEngineReady) { try { await zgEngine.sendBroadcastMessage(ZEGO_ROOM_ID, JSON.stringify(payload)); } catch (e){} }
         }
 
+        // 🚨 核心还原：Discord 原生自适应 Markdown 宏解析编译器，支持多形态标记无缝降临
+        function compileDiscordMarkdown(text) {
+            let html = escapeHTML(text);
+            // 粗体
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // 斜体
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            // 下划线
+            html = html.replace(/__(.*?)__/g, '<u>$1</u>');
+            // 删除线
+            html = html.replace(/~~(.*?)~~/g, '<del>$1</del>');
+            // 行内灰色代码块
+            html = html.replace(/`(.*?)`/g, '<span class="discord-inline-code">$1</span>');
+            return html;
+        }
+
+        function renderMessage(msg) {
+            const container = document.getElementById('chat-messages'); if(!container) return;
+            const isImage = msg.type === "IMAGE";
+            const timeStr = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const row = document.createElement('div');
+            row.id = msg.msgId || ("local_" + Date.now());
+            
+            const isMention = msg.content && msg.content.includes("@everyone");
+            row.className = isMention ? "chat-row mention-row" : "chat-row";
+            
+            let compiledContent = isMention 
+                ? compileDiscordMarkdown(msg.content).replace(/@everyone/g, '<span class="mention-badge">@everyone</span>')
+                : compileDiscordMarkdown(msg.content);
+
+            let contentHTML = isImage 
+                ? `<img src="${msg.content}" class="msg-img" onclick="window.open('${msg.content}')">`
+                : `<p class="text-neutral-200 select-text leading-relaxed break-all">${compiledContent}</p>`;
+
+            row.innerHTML = `
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${msg.senderAvatar}" class="w-8 h-8 rounded-full bg-discord-guilds flex-shrink-0 mt-0.5 border border-neutral-800">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-baseline space-x-2"><span class="font-semibold text-white hover:underline cursor-pointer">${escapeHTML(msg.senderName)}</span><span class="text-[9px] text-neutral-500">${timeStr}</span></div>
+                    ${contentHTML}
+                    <div class="reaction-box"></div>
+                </div>
+                <div class="msg-actions">
+                    <button class="action-icon-btn" onclick="sendReaction('${row.id}', '🖤')">🖤</button>
+                    <button class="action-icon-btn" onclick="sendReaction('${row.id}', '🎀')">🎀</button>
+                    <button class="action-icon-btn" onclick="pinThisMessage('${row.id}')">📌</button>
+                    ${msg.senderUid === myInfo.uid ? `<button class="action-icon-btn" style="color: #da373c;" onclick="deleteMyMessage('${row.id}')">🗑️</button>` : ''}
+                </div>
+            `;
+            container.appendChild(row); container.scrollTop = container.scrollHeight;
+        }
+
+        // 🚨 交互控制调节
+        function toggleWhiteboardLayer() {
+            const area = document.getElementById('whiteboard-area');
+            const palette = document.getElementById('board-palette');
+            isBoardOpen = !isBoardOpen;
+            if(isBoardOpen) {
+                area.style.display = 'flex';
+                if(palette) palette.style.display = 'flex';
+                document.getElementById('btn-toggle-board').style.backgroundColor = '#ff85a2';
+                document.getElementById('btn-toggle-board').style.color = '#000';
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight - 40;
+                setupCanvasStyle();
+            } else {
+                area.style.display = 'none';
+                if(palette) palette.style.display = 'none';
+                document.getElementById('btn-toggle-board').style.backgroundColor = '#383a40';
+                document.getElementById('btn-toggle-board').style.color = '#fff';
+            }
+        }
+        document.getElementById('btn-toggle-board').addEventListener('click', toggleWhiteboardLayer);
+
+        function changeBrushColor(color) { currentBrushColor = color; setupCanvasStyle(); }
+        function changeBrushSize(size) { currentBrushSize = parseInt(size); setupCanvasStyle(); }
+        function setupCanvasStyle() { ctx.strokeStyle = currentBrushColor; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = currentBrushSize; }
+
+        // 🚨 白板信令广播偏轴动态清洗修对
+        function drawLocalLine(x1, y1, x2, y2, emitBroadcast = true, color = currentBrushColor, size = currentBrushSize) {
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = size;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            ctx.restore();
+
+            if(emitBroadcast && isEngineReady) {
+                zgEngine.sendBroadcastMessage(ZEGO_ROOM_ID, JSON.stringify({ type: "DRAW_PATH", x1: x1 / canvas.width, y1: y1 / canvas.height, x2: x2 / canvas.width, y2: y2 / canvas.height, color, size })).catch(()=>{});
+            }
+        }
+
         canvas.addEventListener('mousedown', (e) => { isDrawing = true; [lastX, lastY] = [e.offsetX, e.offsetY]; });
         canvas.addEventListener('mousemove', (e) => { if (!isDrawing) return; drawLocalLine(lastX, lastY, e.offsetX, e.offsetY, true); [lastX, lastY] = [e.offsetX, e.offsetY]; });
         window.addEventListener('mouseup', () => isDrawing = false);
-        canvas.addEventListener('touchstart', (e) => { isDrawing = true; const rect = canvas.getBoundingClientRect(); lastX = Math.round(e.touches[0].clientX - rect.left); lastY = Math.round(e.touches[0].clientY - rect.top); }, { passive: true });
-        canvas.addEventListener('touchmove', (e) => { if (!isDrawing) return; const rect = canvas.getBoundingClientRect(); const currentX = Math.round(e.touches[0].clientX - rect.left); const currentY = Math.round(e.touches[0].clientY - rect.top); drawLocalLine(lastX, lastY, currentX, currentY, true); [lastX, lastY] = [currentX, currentY]; }, { passive: true });
+
+        canvas.addEventListener('touchstart', (e) => {
+            isDrawing = true; const rect = canvas.getBoundingClientRect();
+            // 引入依靠滑控精细防偏移
+            lastX = Math.round((e.touches[0].clientX - rect.left) * (canvas.width / rect.width));
+            lastY = Math.round((e.touches[0].clientY - rect.top) * (canvas.height / rect.height));
+        }, { passive: true });
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing) return; const rect = canvas.getBoundingClientRect();
+            const currentX = Math.round((e.touches[0].clientX - rect.left) * (canvas.width / rect.width));
+            const currentY = Math.round((e.touches[0].clientY - rect.top) * (canvas.height / rect.height));
+            drawLocalLine(lastX, lastY, currentX, currentY, true); [lastX, lastY] = [currentX, currentY];
+        }, { passive: true });
+
         function initCanvasResize() { window.addEventListener('resize', () => { if(isBoardOpen) { const temp = ctx.getImageData(0,0,canvas.width,canvas.height); canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight - 40; setupCanvasStyle(); ctx.putImageData(temp,0,0); } }); }
 
         async function refreshOnlineMemberList() {
@@ -803,6 +941,25 @@
                 document.getElementById('member-count').innerText = count;
             } catch(e){}
         }
+
+        function broadcastUserInfo() {
+            if(isEngineReady && !isHardwareLock) { 
+                const payload = { type: "IDENTITY_SYNC", name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted, isCameraOn: isCameraOn, isScreenSharing: isScreenSharing, statusText: myInfo.statusText };
+                zgEngine.sendBroadcastMessage(ZEGO_ROOM_ID, JSON.stringify(payload)).catch(()=>{});
+            }
+        }
+
+        document.getElementById('btn-trigger-image').addEventListener('click', () => document.getElementById('image-loader').click());
+        document.getElementById('image-loader').addEventListener('change', function(e) {
+            const file = e.target.files[0]; if (!file || file.size > 150 * 1024) return alert("请发送 150KB 内的小图资产。");
+            const reader = new FileReader();
+            reader.onload = async function(evt) {
+                const payload = { type: "IMAGE", msgId: "msg_"+Date.now(), channelId: activeTextChannel, senderUid: myInfo.uid, senderName: myInfo.name, senderAvatar: myInfo.avatar, content: evt.target.result, timestamp: Date.now() };
+                renderMessage(payload);
+                if(isEngineReady) await zgEngine.sendBroadcastMessage(ZEGO_ROOM_ID, JSON.stringify(payload));
+            };
+            reader.readAsDataURL(file); this.value = "";
+        });
 
         setInterval(() => { if(myInfo.name && isEngineReady) { broadcastUserInfo(); } refreshOnlineMemberList(); }, 4000);
         function escapeHTML(str) { if (!str) return ''; return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
