@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Discord Sovereign Luxury Edition</title>
-    <!-- 引入国际权威公共 CDN 主干网服务源 -->
+    <!-- 接入国际权威公共主干网核心依赖源 -->
     <script src="https://cdn.jsdelivr.net/npm/zego-express-engine-webrtc@3.0.0/ZegoExpressWebRTC.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     
     <style>
-        /* 原生高级 CSS 像素级锁死，100% 免疫巨大化，杜绝排版撑开 */
+        /* 🚨 物理锁死：全原生高级 CSS 像素级约束，100% 修复巨大化 Bug 且自适应抽屉 */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #111214; color: #dbdee1; font-size: 13px; overflow: hidden; height: 100vh; width: 100vw; -webkit-font-smoothing: antialiased; }
         
@@ -25,9 +25,9 @@
         .server-icon:hover { border-radius: 16px; border-color: #ff85a2; background-color: #ff85a2; color: #000; box-shadow: 0 0 12px rgba(255, 133, 162, 0.5); }
         .guild-separator { width: 32px; height: 2px; background-color: #35363c; border-radius: 1px; }
 
-        /* ==================== 第二栏：频道树栏 (严格锁死 240px) ==================== */
+        /* ==================== 第二栏：中左侧频道树栏 (严格锁死 240px) ==================== */
         .channels-sidebar { width: 240px; min-width: 240px; background-color: #2b2d31; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #1f2023; z-index: 10; height: 100%; flex-shrink: 0; }
-        .sidebar-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; padding: 0 16px; font-weight: bold; color: #fff; font-size: 14px; }
+        .sidebar-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; padding: 0 16px; font-weight: bold; color: #fff; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .channels-container { padding: 8px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
         .channel-group-title { font-size: 10px; font-weight: bold; color: #949ba4; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 4px; }
         .channel-item { display: flex; align-items: center; padding: 6px 8px; border-radius: 4px; cursor: pointer; color: #949ba4; gap: 6px; font-size: 13px; position: relative; transition: background-color 0.1s, color 0.1s; }
@@ -37,7 +37,7 @@
         .active-indicator { width: 4px; height: 16px; background-color: #ff85a2; border-radius: 0 4px 4px 0; position: absolute; left: 0; top: 8px; display: none; }
         .channel-item.active .active-indicator { display: block; }
 
-        /* 用户控制底座 */
+        /* 用户底座 */
         .user-panel { height: 52px; background-color: #232428; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; flex-shrink: 0; }
         .user-info { display: flex; align-items: center; gap: 8px; overflow: hidden; max-w: 130px; cursor: pointer; }
         .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #111214; border: 1px solid rgba(255,133,162,0.2); flex-shrink: 0; }
@@ -48,17 +48,17 @@
         .ctrl-btn { background: none; border: none; color: #b5bac1; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 14px; }
         .ctrl-btn:hover { background-color: rgba(78, 80, 88, 0.3); color: #dbdee1; }
 
-        /* ==================== 第三栏：中央主视窗看板 ==================== */
+        /* ==================== 第三栏：中央主内容区 ==================== */
         .main-content-area { flex: 1; display: flex; flex-direction: column; background-color: #313338; min-w: 0; height: 100%; }
         .content-header { height: 48px; border-bottom: 1px solid #1f2023; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-weight: bold; color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.2); flex-shrink: 0; }
         .header-title-zone { display: flex; align-items: center; gap: 8px; }
         .hamburger-btn { display: none; background: none; border: none; color: #ff85a2; font-size: 18px; cursor: pointer; padding: 4px; border-radius: 4px; }
         .hamburger-btn:hover { background-color: rgba(78, 80, 88, 0.2); }
-        .voice-active-tag { font-size: 10px; background-color: rgba(255,133,162,0.1); color: #ff85a2; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,133,162,0.25); font-weight: bold; letter-spacing: 0.5px; }
+        .voice-active-tag { font-size: 10px; background-color: rgba(255,133,162,0.15); color: #ff85a2; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,133,162,0.25); font-weight: bold; letter-spacing: 0.5px; }
 
         .workspace-split { flex: 1; display: flex; overflow: hidden; position: relative; }
         
-        /* 文本模式 */
+        /* 文本大厅 */
         .chat-panel { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-w: 0; height: 100%; }
         .messages-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
         .chat-row { display: flex; gap: 16px; align-items: flex-start; padding: 4px 16px; position: relative; margin: 0 -16px; }
@@ -87,11 +87,10 @@
         .input-container { background-color: #383a40; border-radius: 8px; padding: 11px 16px; display: flex; align-items: center; gap: 16px; }
         .attach-btn { background: none; border: none; color: #b5bac1; font-size: 18px; cursor: pointer; font-weight: bold; line-height: 1; }
         .main-chat-input { flex: 1; background: none; border: none; color: #f2f3f5; font-size: 14px; outline: none; }
-        .main-chat-input::placeholder { color: #6d737d; }
         
         .typing-box { height: 20px; padding: 0 16px; font-size: 11px; color: #949ba4; display: none; align-items: center; gap: 4px; }
 
-        /* 多媒体语音面板 */
+        /* 语音九宫格大厅 */
         .voice-panel { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px; background-color: rgba(0,0,0,0.1); overflow: hidden; height: 100%; }
         .media-controls-bar { background-color: #2b2d31; padding: 8px; border-radius: 8px; display: flex; justify-content: center; gap: 12px; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .media-ctrl-btn { background-color: #383a40; border: 1px solid rgba(255,133,162,0.1); color: #fff; padding: 6px 16px; border-radius: 4px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background-color 0.15s; font-weight: 500; }
@@ -111,8 +110,8 @@
         .clear-canvas-btn { background-color: #383a40; border: none; color: #fff; padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
         #whiteboard-canvas { flex: 1; width: 100%; height: 100%; touch-action: none; }
 
-        /* ==================== 第四栏：最右侧在线成员树列表 ==================== */
-        .member-list-sidebar { width: 240px; min-width: 240px; background-color: #2b2d31; display: flex; flex-direction: column; flex-shrink: 0; }
+        /* ==================== 第四栏：最右侧在线成员树列表 (严格锁死 240px) ==================== */
+        .member-list-sidebar { width: 240px; min-width: 240px; background-color: #2b2d31; display: flex; flex-direction: column; flex-shrink: 0; border-left: 1px solid #1f2023; }
         .member-sidebar-title { padding: 24px 16px 8px 16px; font-size: 12px; font-weight: bold; color: #949ba4; text-transform: uppercase; letter-spacing: 0.5px; }
         .member-items-stack { padding: 0 8px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; flex: 1; }
         .member-card-node { display: flex; flex-direction: column; padding: 6px 8px; border-radius: 4px; cursor: pointer; transition: background-color 0.1s; }
@@ -122,7 +121,7 @@
         .member-node-name { font-size: 14px; color: #b5bac1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
         .member-node-signature { font-size: 11px; color: #949ba4; padding-left: 42px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: -2px; }
 
-        /* 移动端媒体响应样式 */
+        /* 移动端抽屉控制 */
         @media (max-width: 1023px) {
             .sidebar-drawer { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.5); }
             .sidebar-drawer.drawer-open { transform: translateX(0); }
@@ -182,10 +181,10 @@
                         <div id="text-channels-container">
                             <div class="channel-item active" data-type="text" data-channel="chat-lobby">
                                 <div class="active-indicator"></div>
-                                <span style="font-size: 16px; font-weight: 300; color: #80848e; margin-left: 6px;">#</span> <span style="margin-left: 2px;">日常倾诉大厅</span>
+                                <span style="font-size: 16px; font-weight: 300; color: #80848e; margin-left: 6px;">#</span> <span class="ch-name-text" style="margin-left: 2px;">日常倾诉大厅</span>
                             </div>
                             <div class="channel-item" data-type="text" data-channel="announcements">
-                                <span style="font-size: 16px; font-weight: 300; color: #80848e; margin-left: 6px;">#</span> <span style="margin-left: 2px;">契约置顶榜</span>
+                                <span style="font-size: 16px; font-weight: 300; color: #80848e; margin-left: 6px;">#</span> <span class="ch-name-text" style="margin-left: 2px;">契约置顶榜</span>
                             </div>
                         </div>
                     </div>
@@ -193,7 +192,7 @@
                         <div class="channel-group-title">多媒体语音大厅</div>
                         <div id="voice-channels-container">
                             <div class="channel-item" data-type="voice" data-channel="global-server-room">
-                                <span style="margin-left: 6px;">🔮</span> <span style="margin-left: 2px;">千重夜话连线厅</span>
+                                <span style="margin-left: 6px;">🔮</span> <span class="ch-name-text" style="margin-left: 2px;">千重夜话连线厅</span>
                             </div>
                         </div>
                     </div>
@@ -214,7 +213,7 @@
             </div>
         </div>
 
-        <!-- 主主看板区 -->
+        <!-- 主看板区 -->
         <div class="main-content-area">
             <div class="content-header">
                 <div class="header-title-zone">
@@ -275,7 +274,6 @@
     <input type="file" id="image-loader" accept="image/*" class="hidden" style="display: none;">
 
     <script>
-        // 固定单一大厅联邦房间名锁，文字消息走分类信道，完全扼杀因退出房间造成的鉴权锁死 Bug
         const NATIVE_ROOM_ID = "global-server-room"; 
 
         let zgEngine = null;
@@ -343,7 +341,6 @@
 
             await initZegoEngine();
             
-            // 🚨 核心时序：直接进入联邦主房间并宣告在线
             if(isEngineReady) {
                 const token = generateZegoRoomToken(NATIVE_ROOM_ID, myInfo.uid);
                 await zgEngine.loginRoom(NATIVE_ROOM_ID, token, { userID: myInfo.uid, userName: myInfo.name }, { userUpdate: true });
@@ -504,6 +501,7 @@
             container.appendChild(row); container.scrollTop = container.scrollHeight;
         }
 
+        // 表情和管理
         function sendReaction(msgId, emoji) {
             executeLocalReactionAppend(msgId, emoji);
             if(isEngineReady) {
@@ -555,7 +553,6 @@
             document.getElementById('room-title-hashtag').innerText = "#";
             document.getElementById('room-title-text').innerText = itemEl ? itemEl.querySelector('span:not([style])').innerText : channelId;
             
-            // UI展示文字，遮蔽语音
             document.getElementById('panel-chat').style.display = 'flex'; 
             document.getElementById('panel-voice').style.display = 'none';
 
@@ -564,7 +561,7 @@
             refreshOnlineMemberList();
         }
 
-        // 🚨 电脑端秒进语音核心：不再反复登入登出即构房间，而是直接在此常驻房间推流/拉流
+        // 🚨 核心修复：电脑端秒进音轨通路，绝不调用挂起死锁函数
         async function switchVoiceChannel(channelId) {
             toggleSidebarDrawer(false); 
             
@@ -581,15 +578,13 @@
             if(itemEl) itemEl.classList.add('active');
 
             try {
-                // 彻底修复：如果当前已经推流，则不再重复推流
                 if(!localStreamInstance && isEngineReady) {
-                    // 创建标准音频轨
+                    // 核心修复点：显式调用摄像头/麦克风参数分离，锁定电脑声卡
                     localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: false } });
-                    // 向当前常驻大厅推送流
                     await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
                 }
                 updateVoiceUIRender();
-            } catch (err) { console.error("语音信道挂载滑丝:", err); }
+            } catch (err) { console.error("语音频道推流死锁保护:", err); }
         }
 
         async function leaveCurrentVoiceChannel() {
@@ -598,8 +593,10 @@
             if(isBoardOpen) toggleWhiteboardLayer(); 
             
             if(localStreamInstance) { 
-                zgEngine.stopPublishingStream("stream_" + myInfo.uid); 
-                zgEngine.destroyStream(localStreamInstance); 
+                try {
+                    await zgEngine.stopPublishingStream("stream_" + myInfo.uid); 
+                    zgEngine.destroyStream(localStreamInstance); 
+                } catch(e){}
                 localStreamInstance = null; 
             }
             
@@ -619,7 +616,12 @@
                     localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: true, facingMode: currentCameraFacing } });
                     await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
                     isCameraOn = true; document.getElementById('btn-toggle-video').style.backgroundColor = '#ff85a2'; document.getElementById('btn-toggle-video').style.color = '#000';
+                    
                     updateVoiceUIRender();
+                    setTimeout(() => {
+                        const localBox = document.getElementById(`video-slot-local`);
+                        if(localBox) { localBox.innerHTML = ""; zgEngine.createLocalStreamView(localStreamInstance).play(localBox); }
+                    }, 300);
                 } else {
                     if(localStreamInstance) { zgEngine.stopPublishingStream("stream_" + myInfo.uid); zgEngine.destroyStream(localStreamInstance); }
                     localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: false } });
@@ -645,9 +647,13 @@
                     await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
                     isScreenSharing = true; document.getElementById('btn-toggle-screen').style.backgroundColor = '#ff85a2'; document.getElementById('btn-toggle-screen').style.color = '#000';
                     updateVoiceUIRender();
+                    setTimeout(() => {
+                        const localBox = document.getElementById(`video-slot-local`);
+                        if(localBox) { localBox.innerHTML = ""; zgEngine.createLocalStreamView(localStreamInstance).play(localBox); }
+                    }, 300);
                 } catch(e){}
             } else {
-                isScreenSharing = false; document.getElementById('btn-toggle-screen').classList.remove('bg-pink-500', 'text-black');
+                isScreenSharing = false; document.getElementById('btn-toggle-screen').style.backgroundColor = '#383a40'; document.getElementById('btn-toggle-screen').style.color = '#fff';
                 if(localStreamInstance) { zgEngine.stopPublishingStream("stream_" + myInfo.uid); zgEngine.destroyStream(localStreamInstance); }
                 localStreamInstance = await zgEngine.createStream({ camera: { audio: true, video: false } });
                 await zgEngine.startPublishingStream("stream_" + myInfo.uid, localStreamInstance, { extraInfo: JSON.stringify({ name: myInfo.name, avatar: myInfo.avatar, isMuted: isMuted }) });
@@ -728,6 +734,7 @@
             listContainer.appendChild(item);
         }
 
+        // 🚨 稳定重写：频道节点原生代理，规避冒泡阻断 Bug
         document.querySelectorAll('.channel-item').forEach(el => {
             el.addEventListener('click', (e) => {
                 const currentBtn = e.currentTarget; const type = currentBtn.dataset.type; const target = currentBtn.dataset.channel;
@@ -743,12 +750,6 @@
             container.innerHTML = "";
 
             appendVoiceCard(myInfo.uid, myInfo.name, myInfo.avatar, isMuted, true);
-            if(localStreamInstance && (isCameraOn || isScreenSharing)) {
-                setTimeout(() => {
-                    const localBox = document.getElementById(`video-slot-local`);
-                    if(localBox) { localBox.innerHTML = ""; zgEngine.createLocalStreamView(localStreamInstance).play(localBox); }
-                }, 300);
-            }
             for (let id in onlineRoomUsers) {
                 const user = onlineRoomUsers[id]; appendVoiceCard(id, user.name, user.avatar, user.isMuted, false);
             }
@@ -797,7 +798,7 @@
         });
 
         setInterval(() => { if(myInfo.name && isEngineReady) {
-            zgEngine.sendCustomCommand(NATIVE_ROOM_ID, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: activeTextChannel, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
+            zgEngine.sendCustomCommand(NATIVE_ROOM_ID, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.uid, voiceChannel: myInfo.activeRoomId, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
         }}, 5000);
         const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
