@@ -49,8 +49,6 @@
         .dot-blink:nth-child(3) { animation-delay: 0.4s; }
         
         .video-view-container video { object-fit: cover !important; border-radius: 12px; }
-        
-        /* Whiteboard Canvas */
         #wb-canvas { cursor: crosshair; touch-action: none; }
     </style>
 </head>
@@ -83,7 +81,7 @@
         <div class="bg-jirai-dark p-5 rounded-2xl w-full max-w-sm border border-jirai-pink/30">
             <h3 class="text-sm font-bold text-white mb-4 text-center">🎀 调整你的缔约印记</h3>
             <div class="flex flex-col items-center space-y-3 mb-4">
-                <img id="modal-avatar-preview" src="" class="w-16 h-16 rounded-full border border-jirai-pink bg-jirai-blacker">
+                <img id="modal-avatar-preview" src="" class="w-16 h-16 rounded-full border border-jirai-pink bg-jirai-blacker object-cover">
                 <button id="btn-upload-avatar" class="text-[10px] bg-jirai-input text-jirai-pink border border-jirai-pink/30 px-2 py-1 rounded">更新自定义头像文件</button>
             </div>
             <div class="space-y-3">
@@ -144,7 +142,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- 底部个人信息面板：Discord高度拟真 -->
+                <!-- 底部个人信息面板 -->
                 <div class="h-14 bg-jirai-blacker flex items-center justify-between px-2 flex-shrink-0 border-t border-jirai-pink/5">
                     <div class="flex items-center space-x-1.5 overflow-hidden cursor-pointer group" id="user-profile-trigger" title="点击重铸个人契约">
                         <img id="my-avatar" src="" class="w-8 h-8 rounded-full bg-neutral-800 border border-jirai-pink/20 object-cover">
@@ -206,7 +204,7 @@
                     <div id="voice-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 overflow-y-auto custom-scrollbar"></div>
                 </div>
 
-                <!-- 模块三：新增实时协作电子白板面板 -->
+                <!-- 模块三：实时协作电子白板面板 -->
                 <div id="panel-whiteboard" class="flex-1 flex flex-col hidden bg-jirai-blacker p-3">
                     <div class="mb-2 flex items-center justify-between bg-jirai-dark p-2 rounded-xl border border-neutral-800">
                         <span class="text-xs text-jirai-pink font-bold">🔮 实时下生协作灵卷</span>
@@ -227,7 +225,6 @@
         </div>
     </div>
 
-    <!-- 隐藏的文件选择器 -->
     <input type="file" id="image-loader" accept="image/*" class="hidden">
     <input type="file" id="avatar-uploader" accept="image/*" class="hidden">
 
@@ -240,7 +237,6 @@
         let isRtmReady = false; 
         
         let localTracks = { audioTrack: null, videoTrack: null, screenTrack: null };
-        // 核心修正：优化数据结构，头像支持 base64 或者 dicebear 种子
         let myInfo = { uid: "", name: "", avatar: "Ares", activeVoiceChannel: null, rtcUid: null, statusText: "🎀 处于混沌极点" };
         let onlineUsers = {};
         let activeTextChannel = "chat-lobby";
@@ -248,7 +244,6 @@
         let currentCameraFacing = "user"; 
         let typingTimeout = null;
 
-        // 白板绘图状态
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
@@ -263,7 +258,6 @@
 
         const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-        // --- 抽屉侧向手势滑动控制器 ---
         const btnSidebar = document.getElementById('btn-trigger-sidebar');
         const sidebarWrapper = document.getElementById('sidebar-wrapper');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -288,7 +282,6 @@
             if (touchStartX - touchEndX > 60) toggleSidebarDrawer(false);
         }, {passive: true});
 
-        // 登录头像选择
         let selectedSeed = "Ares";
         document.querySelectorAll('.avatar-option').forEach(el => {
             el.addEventListener('click', (e) => {
@@ -299,7 +292,6 @@
         });
         document.querySelector('.avatar-option').classList.add('border-jirai-pink', 'bg-jirai-main');
 
-        // 进入大厅主进程
         document.getElementById('btn-enter').addEventListener('click', async () => {
             const name = document.getElementById('username-input').value.trim();
             if(!name) return alert("名号不可为空白！");
@@ -326,7 +318,6 @@
             document.getElementById('my-status-text').innerText = myInfo.statusText;
         }
 
-        // --- Agora核心音视频与实时消息服务初始化 ---
         async function initAgoraServices() {
             try {
                 rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
@@ -365,7 +356,6 @@
             }
         }
 
-        // --- 聊天发送端逻辑控制 (修复对方名字看不到的隐患) ---
         const chatInput = document.getElementById('chat-input');
         chatInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -381,7 +371,6 @@
 
             isPublishingLock = true;
             const msgId = "msg_" + Date.now();
-            // 修复点：显式封装全量的当前用户的名字和头像资产进数据载荷
             const payload = { 
                 type: "TEXT", 
                 msgId, 
@@ -409,7 +398,6 @@
             }
         });
 
-        // --- 深度自定义头像及个签重铸弹窗系统 ---
         document.getElementById('user-profile-trigger').addEventListener('click', () => {
             document.getElementById('modal-avatar-preview').src = myInfo.avatar;
             document.getElementById('modal-name-input').value = myInfo.name;
@@ -449,17 +437,14 @@
             updateLocalProfileUI();
             document.getElementById('profile-modal').classList.add('hidden');
             
-            // 立即对全网频道进行身份重构洗牌广播
             broadcastUserInfo(); 
             refreshOnlineMemberList();
         });
 
-        // --- RTM 消息总线中央分发系统 ---
         function handleIncomingRTMEvent(event) {
             try {
                 const data = JSON.parse(event.message);
                 
-                // 收到全网节点身份认证簿
                 if (data.type === "IDENTITY") {
                     onlineUsers[event.publisher] = { 
                         name: data.name, 
@@ -486,22 +471,19 @@
                 if (data.type === "REACTION" && data.channelId === activeTextChannel) {
                     executeLocalReactionAppend(data.targetMsgId, data.emoji); return;
                 }
-                // 收到白板多点路径坐标广播
-                if (data.type === "WB_DRAW" && activeTextChannel === "chat-lobby") {
+                if (data.type === "WB_DRAW") {
                     drawRemoteLine(data.x1, data.y1, data.x2, data.y2); return;
                 }
-                if (data.type === "WB_CLEAR" && activeTextChannel === "chat-lobby") {
+                if (data.type === "WB_CLEAR") {
                     wbCtx.clearRect(0, 0, wbCanvas.width, wbCanvas.height); return;
                 }
                 
-                // 渲染常规和媒体图片消息
                 if (data.channelId === activeTextChannel && event.publisher !== myInfo.uid) {
                     renderMessage(data);
                 }
             } catch (e) {}
         }
 
-        // --- 拟真渲染消息行（增强稳定性，双保险阻断未载入姓名Bug） ---
         function renderMessage(msg) {
             const container = document.getElementById('chat-messages');
             if(!container) return;
@@ -515,7 +497,6 @@
                 ? `<img src="${msg.content}" class="mt-2 max-w-xs max-h-48 rounded-xl border border-neutral-900 object-cover cursor-zoom-in" onclick="window.open('${msg.content}')">`
                 : `<p class="text-neutral-300 select-text leading-relaxed break-all">${escapeHTML(msg.content)}</p>`;
 
-            // 双保险：若RTM由于异步延迟未带上名字，则从在线缓存检索兜底
             let displayName = msg.senderName;
             if(!displayName && onlineUsers[msg.senderUid]) displayName = onlineUsers[msg.senderUid].name;
             if(!displayName) displayName = "迷失缔约者";
@@ -540,7 +521,6 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // --- Discord 经典高级交互功能集 (表情回应、消息置顶、消息撤回) ---
         function sendReaction(msgId, emoji) {
             executeLocalReactionAppend(msgId, emoji);
             if(isRtmReady) { rtmClient.publish(activeTextChannel, JSON.stringify({ type: "REACTION", channelId: activeTextChannel, targetMsgId: msgId, emoji: emoji })).catch(()=>{}); }
@@ -581,7 +561,24 @@
             clearTimeout(typingTimeout); typingTimeout = setTimeout(() => { box.classList.add('hidden'); }, 2000);
         }
 
-        // --- 视窗及左组件树路由切流调度 ---
+        // --- 视图视图切换器 ---
+        document.getElementById('btn-home-view').addEventListener('click', () => {
+            document.getElementById('panel-chat').classList.remove('hidden');
+            document.getElementById('panel-voice').classList.add('hidden');
+            document.getElementById('panel-whiteboard').classList.add('hidden');
+            document.getElementById('btn-home-view').classList.add('text-jirai-pink');
+            document.getElementById('btn-whiteboard-view').classList.remove('text-jirai-pink');
+        });
+
+        document.getElementById('btn-whiteboard-view').addEventListener('click', () => {
+            document.getElementById('panel-chat').classList.add('hidden');
+            document.getElementById('panel-voice').classList.add('hidden');
+            document.getElementById('panel-whiteboard').classList.remove('hidden');
+            document.getElementById('btn-whiteboard-view').classList.add('text-jirai-pink');
+            document.getElementById('btn-home-view').classList.remove('text-jirai-pink');
+            setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 50);
+        });
+
         async function switchTextChannel(channelId) {
             toggleSidebarDrawer(false);
             if(activeTextChannel && isRtmReady) { try { await rtmClient.unsubscribe(activeTextChannel); } catch(e){} }
@@ -590,7 +587,6 @@
             const itemEl = document.querySelector(`[data-channel="${channelId}"]`);
             document.getElementById('room-title').innerHTML = `<span class="text-jirai-pink text-xl mr-1">#</span> <span>${itemEl ? itemEl.innerText.substring(1).trim() : channelId}</span>`;
             
-            // UI 面板状态机复位切换
             document.getElementById('panel-chat').classList.remove('hidden'); 
             document.getElementById('panel-voice').classList.add('hidden');
             document.getElementById('panel-whiteboard').classList.add('hidden');
@@ -630,7 +626,6 @@
             updateVoiceUIRender(); switchTextChannel("chat-lobby");
         }
 
-        // --- 多媒体视讯核心模块（集成镜头翻转） ---
         async function toggleCameraStream() {
             if(!myInfo.activeVoiceChannel) return;
             if(!isCameraOn) {
@@ -652,7 +647,6 @@
         async function toggleScreenStream() {
             if(!myInfo.activeVoiceChannel) return;
             
-            // 移动端处理：平滑降级切换为前后摄像头反转
             if (isMobileDevice) {
                 if(!isCameraOn) return alert("请先开启视讯连线，然后再翻转镜头！");
                 currentCameraFacing = (currentCameraFacing === "user") ? "environment" : "user";
@@ -664,7 +658,6 @@
                 return;
             }
 
-            // PC 浏览器端处理：标准高画质屏幕共享投屏
             if(!isScreenSharing) {
                 try {
                     localTracks.screenTrack = await AgoraRTC.createScreenVideoTrack({ encoderConfig: "1080p_1" });
@@ -685,7 +678,6 @@
         document.getElementById('btn-toggle-video').addEventListener('click', toggleCameraStream);
         document.getElementById('btn-toggle-screen').addEventListener('click', toggleScreenStream);
 
-        // --- 全网缔约者列表同步刷新 ---
         async function refreshOnlineMemberList() {
             if(!isRtmReady) return;
             try {
@@ -763,7 +755,68 @@
             container.appendChild(card);
         }
 
-        // --- 新增：极简协作多端同步白板底层算法 ---
+        document.getElementById('btn-trigger-image').addEventListener('click', () => document.getElementById('image-loader').click());
+        document.getElementById('image-loader').addEventListener('change', function(e) {
+            const file = e.target.files[0]; if (!file || file.size > 150 * 1024) return alert("请发送 150KB 内的小图资产。");
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const payload = { type: "IMAGE", msgId: "msg_"+Date.now(), channelId: activeTextChannel, senderUid: myInfo.uid, senderName: myInfo.name, senderAvatar: myInfo.avatar, content: evt.target.result, timestamp: Date.now() };
+                if(isRtmReady) rtmClient.publish(activeTextChannel, JSON.stringify(payload)).catch(()=>{});
+                renderMessage(payload);
+            };
+            reader.readAsDataURL(file); this.value = "";
+        });
+
+        function broadcastUserInfo() {
+            if(isRtmReady && rtmClient) {
+                rtmClient.publish(activeTextChannel, JSON.stringify({ type: "IDENTITY", name: myInfo.name, avatar: myInfo.avatar, rtcUid: myInfo.rtcUid, voiceChannel: myInfo.activeVoiceChannel, isMuted: isMuted, statusText: myInfo.statusText })).catch(()=>{});
+            }
+        }
+
+        document.getElementById('btn-disconnect-voice').addEventListener('click', () => leaveCurrentVoiceChannel());
+        document.getElementById('btn-toggle-mic').addEventListener('click', async () => {
+            isMuted = !isMuted; if(localTracks.audioTrack) await localTracks.audioTrack.setMuted(isMuted);
+            document.getElementById('btn-toggle-mic').innerText = isMuted ? "🔇" : "🎙️";
+            document.getElementById('btn-toggle-mic').classList.toggle('text-pink-400', isMuted);
+            broadcastUserInfo(); updateVoiceUIRender();
+        });
+
+        document.getElementById('btn-change-bg').addEventListener('click', () => {
+            currentBgIdx = (currentBgIdx + 1) % backgrounds.length;
+            const root = document.getElementById('app-root');
+            root.style.backgroundImage = backgrounds[currentBgIdx].startsWith('url') ? backgrounds[currentBgIdx] : '';
+            root.style.background = backgrounds[currentBgIdx].startsWith('linear') ? backgrounds[currentBgIdx] : '';
+        });
+
+        document.querySelectorAll('.channel-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const currentBtn = e.currentTarget;
+                const type = currentBtn.dataset.type;
+                const target = currentBtn.dataset.channel;
+
+                document.querySelectorAll('.channel-item').forEach(i => {
+                    i.className = "channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-sm transition";
+                });
+                currentBtn.className = "channel-item flex items-center px-2 py-1.5 rounded-xl text-jirai-pink bg-jirai-pink/10 border border-jirai-pink/10 cursor-pointer text-sm font-medium transition";
+                
+                if (type === 'text') switchTextChannel(target); 
+                else if (type === 'voice') switchVoiceChannel(target);
+            });
+        });
+
+        // --- 白板事件接收器补充与闭合 ---
+        function drawRemoteLine(x1, y1, x2, y2) {
+            wbCtx.beginPath();
+            wbCtx.moveTo(x1 * wbCanvas.width, y1 * wbCanvas.height);
+            wbCtx.lineTo(x2 * wbCanvas.width, y2 * wbCanvas.height);
+            wbCtx.stroke();
+        }
+
+        document.getElementById('btn-clear-wb').addEventListener('click', () => {
+            wbCtx.clearRect(0, 0, wbCanvas.width, wbCanvas.height);
+            if(isRtmReady) { rtmClient.publish(activeTextChannel, JSON.stringify({ type: "WB_CLEAR" })).catch(()=>{}); }
+        });
+
         function initWhiteboardEventListener() {
             function resizeCanvas() {
                 const rect = wbCanvas.parentElement.getBoundingClientRect();
@@ -776,7 +829,6 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            // 触控抓取计算定位
             function getPos(e) {
                 const rect = wbCanvas.getBoundingClientRect();
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -799,9 +851,8 @@
                 wbCtx.lineTo(pos.x, pos.y);
                 wbCtx.stroke();
 
-                // 通过 RTM 的固定默认文本频道广播发送坐标比例参数
                 if(isRtmReady) {
-                    rtmClient.publish("chat-lobby", JSON.stringify({
+                    rtmClient.publish(activeTextChannel, JSON.stringify({
                         type: "WB_DRAW",
                         x1: lastX / wbCanvas.width,
                         y1: lastY / wbCanvas.height,
@@ -816,4 +867,15 @@
 
             wbCanvas.addEventListener('mousedown', startDraw);
             wbCanvas.addEventListener('mousemove', draw);
-            window.addEventListener('mouseupNormally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
+            window.addEventListener('mouseup', stopDraw);
+
+            wbCanvas.addEventListener('touchstart', (e) => { startDraw(e); e.preventDefault(); }, { passive: false });
+            wbCanvas.addEventListener('touchmove', (e) => { draw(e); e.preventDefault(); }, { passive: false });
+            window.addEventListener('touchend', stopDraw);
+        }
+
+        setInterval(() => { if(myInfo.name) broadcastUserInfo(); }, 5000);
+        function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
+    </script>
+</body>
+</html>
