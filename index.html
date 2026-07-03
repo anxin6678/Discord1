@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Discord Jirai-Kei Perfection (Audio & Stream Fixed)</title>
+    <title>Discord Jirai-Kei Perfection (Apple/Safari Audio Fixed)</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.2.2/mqtt.min.js"></script>
     <style>
         body { background-color: #070709; -webkit-tap-highlight-color: transparent; color: #f3f4f6; }
         .bg-jirai-blacker { background-color: #040406; }
@@ -51,7 +53,7 @@
         <div class="bg-jirai-dark p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/30 text-center shadow-2xl">
             <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔦𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
             <h2 class="text-base font-bold mb-1 text-white">地雷物语 · 空间自适应大厅</h2>
-            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Audio Core & Multi-Stream Fixed</p>
+            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Apple iOS Audio Patch Enabled</p>
             
             <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">您的专属名号 🎀</label>
             <input type="text" id="username-input" maxlength="12" placeholder="输入进入结界的花名..." class="w-full p-2.5 bg-jirai-blacker rounded-xl focus:outline-none focus:ring-1 focus:ring-jirai-pink mb-6 text-white border border-neutral-800 text-sm">
@@ -165,6 +167,7 @@
         let localCameraTrack = null; 
         let screenVideoTrack = null; 
         let activeCalls = {};        
+        let appleAudioContextUnlocking = null; // 针对苹果设备强制初始化的全局声学上下文
         
         let myInfo = { uid: "", name: "", avatar: "Ares", activeVoiceChannel: null, statusText: "🎀 处于混沌极点" };
         let onlineUsers = {};
@@ -206,6 +209,11 @@
             document.getElementById('login-overlay').classList.add('hidden');
             switchTextChannel("chat-lobby");
 
+            // 🚨 针对苹果手势追踪：在第一次点击时提前把隐形声学引擎拉起来，防止自动播放被锁
+            try {
+                appleAudioContextUnlocking = new (window.AudioContext || window.webkitAudioContext)();
+            } catch(e){}
+
             asyncInjectNetworkComponents();
         });
 
@@ -238,7 +246,7 @@
             simulateIncomingUser("jirai_sugar_mock", "糖糖酱酱 🎀", "Zeus", "🎀 绝赞渴望中...");
             renderMessage({
                 type: "TEXT", msgId: "sys_protection_msg", channelId: activeTextChannel, senderUid: "system", senderName: "🔮 空间防护姬", senderAvatar: "Hades",
-                content: `【已切入自适应本地调试模式】因当前浏览器安全域未就绪（原生音视频共享必须通过本地服务器 http://localhost 运行，不可直接双击 HTML 文件），系统已就地建立安全沙盒。现已全面支持本地麦克风检测、视讯及屏幕共享流的自我挂载！🖤`,
+                content: `【已切入自适应本地调试模式】因当前浏览器安全域未就绪（原生音视频共享在苹果/Safari下必须通过本地服务器 http://localhost 运行，或者采用局域网 HTTPS 加密，不可直接双击 HTML 文件），系统已就地建立安全沙盒。现已全面支持本地麦克风检测、视讯及屏幕共享流的自我挂载！🖤`,
                 timestamp: Date.now()
             });
         }
@@ -319,7 +327,7 @@
             call.on('error', () => { removeRemoteUserCard(targetUid); });
         }
 
-        // 🚨 【核心修复】：挂载隐藏音频解码器，彻底解决对方有音轨却听不见声音的致命漏洞
+        // 🚨 【苹果生态关键修补点】：强制为动态创建的远程节点打上 playsinline，并强行捕获苹果手势流进行播放
         function handleRemoteStreamConnected(remoteUid, remoteStream) {
             console.log("正在连通远端轨道...", remoteUid);
             
@@ -330,18 +338,28 @@
                 audioEl.id = audioId;
                 audioEl.autoplay = true;
                 audioEl.className = "hidden";
+                // 强制苹果规范注入
+                audioEl.setAttribute('playsinline', 'true');
+                audioEl.setAttribute('webkit-playsinline', 'true');
                 document.body.appendChild(audioEl);
             }
             audioEl.srcObject = remoteStream;
+            // 苹果强锁应急恢复
+            audioEl.play().catch(()=>{
+                // 如果被拦截，挂载全局点击监听，等用户点任何地方时瞬间震醒声音
+                document.addEventListener('click', () => { audioEl.play().catch(()=>{}); }, {once: true});
+            });
 
             let slot = document.getElementById(`video-slot-${remoteUid}`);
             if(!slot) { updateVoiceUIRender(); slot = document.getElementById(`video-slot-${remoteUid}`); }
             if(slot) {
                 if (remoteStream.getVideoTracks().length > 0) {
-                    slot.innerHTML = `<video id="raw-media-${remoteUid}" autoplay playsinline></video>`;
+                    slot.innerHTML = `<video id="raw-media-${remoteUid}" autoplay playsinline webkit-playsinline></video>`;
                     const video = document.getElementById(`raw-media-${remoteUid}`);
                     video.srcObject = remoteStream;
-                    video.play().catch(()=>{});
+                    video.play().catch(()=>{
+                        document.addEventListener('click', () => { video.play().catch(()=>{}); }, {once: true});
+                    });
                 } else {
                     slot.innerHTML = `<img src="https://api.dicebear.com/7.x/bottts/svg?seed=${onlineUsers[remoteUid]?.avatar || 'Ares'}" class="w-12 h-12 rounded-full bg-jirai-blacker border border-neutral-800">`;
                 }
@@ -356,10 +374,14 @@
             document.getElementById('voice-status-pill').classList.remove('hidden'); 
             document.getElementById('btn-disconnect-voice').classList.remove('hidden');
 
+            // 激活苹果手势音频上下文权限
+            if(appleAudioContextUnlocking && appleAudioContextUnlocking.state === 'suspended') {
+                appleAudioContextUnlocking.resume().catch(()=>{});
+            }
+
             try {
-                // 强制校验浏览器是否支持多媒体流接口
                 if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    throw new Error("浏览器底层拒绝或缺少 getUserMedia 接口控制域");
+                    throw new Error("环境未就绪或未通过 HTTPS 加密启动服务");
                 }
                 if(!localMicTrack) {
                     const initAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -368,18 +390,17 @@
                 }
                 updateVoiceUIRender(); setupLocalAudioAnalyser(); broadcastPresence(); broadcastStreamUpdate(); 
             } catch(e) {
-                alert("🎀 连线失败提示：检测到您的物理麦克风未授予权限，或者您直接双击了 HTML 文件。请务必用本地服务器环境运行本页面！");
+                alert(`🎀 苹果/Safari 设备专属提示：\n1. 请检查顶部网址是否为 https:// 开头（苹果要求必须加密）。\n2. 若为局域网测试，请在电脑端部署 HTTPS，手机直接访问 http 会被系统静默切断声音与屏幕共享接口！`);
                 updateVoiceUIRender();
             }
         }
 
-        // 🖥️ 共享屏幕流控制逻辑捕获漏洞修补
         async function toggleScreenStream() {
             if(!myInfo.activeVoiceChannel) return;
             if(!isScreenSharing) {
                 try {
                     if(!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
-                        alert("🎀 共享阻断：当前浏览器或手机环境不支持原生 getDisplayMedia 屏幕分享。请使用电脑端 Chrome 浏览器测试！");
+                        alert("🎀 共享阻断：当前环境不支持原生屏幕分享。注意：iOS 移动端系统层面限制了网页直接呼叫 getDisplayMedia 共享屏幕，请换用 Mac 电脑或 PC 浏览器进行屏幕演示！");
                         return;
                     }
                     const rawScreenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
@@ -389,7 +410,7 @@
                     screenVideoTrack.onended = () => { stopScreenSharing(); };
                     updateVoiceUIRender(); broadcastStreamUpdate();
                 } catch(e) {
-                    alert("🎀 共享未能激活：用户取消或安全上下文不匹配 (" + e.message + ")");
+                    alert("🎀 共享未能激活：" + e.message);
                 }
             } else { stopScreenSharing(); }
         }
@@ -447,7 +468,7 @@
             appendVoiceCard("local", myInfo.name, myInfo.avatar, isMuted);
             const localBox = document.getElementById('video-slot-local');
             if((isScreenSharing || isCameraOn) && localBox) {
-                localBox.innerHTML = `<video id="native-preview-local" autoplay playsinline muted></video>`;
+                localBox.innerHTML = `<video id="native-preview-local" autoplay playsinline webkit-playsinline muted></video>`;
                 const v = document.getElementById('native-preview-local');
                 v.srcObject = generateCurrentMixedStream();
                 v.play().catch(()=>{});
@@ -489,7 +510,7 @@
         function setupLocalAudioAnalyser() {
             if(!localMicTrack) return;
             try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const audioContext = appleAudioContextUnlocking || new (window.AudioContext || window.webkitAudioContext)();
                 const analyser = audioContext.createAnalyser();
                 const tempStream = new MediaStream([localMicTrack]);
                 const source = audioContext.createMediaStreamSource(tempStream);
@@ -526,7 +547,7 @@
             if(mqttClient && mqttClient.connected) mqttClient.publish(`jirai/room/${activeTextChannel}`, JSON.stringify(payload));
             if (onlineUsers["jirai_sugar_mock"]) {
                 setTimeout(() => {
-                    const sugarReplies = ["听见了啦……在这个坏掉的世界线里，你只要看着我一个人就好了。🖤", "捕捉到契约者的电波了！不要乱跑哦，我一直都在注视着你。🎀", "就算公网阻断也无所谓，在这个小小的秘密结界里，只有我们两个人最安全了……🩰", "精神快要超载了呢……多打字和我说说话，绝对不准离开这个房间。🖤"];
+                    const sugarReplies = ["听见了啦……在这个坏掉的世界线里，你只要看着我一个人就好了。🖤", "捕捉到契约者的电波了！不要乱跑哦，我一直都在注视着你。🎀", "就算公网阻断也无所谓，在这个小小的秘密结界里，只有我们两个人最安全了……🩰", "精神快要过载了呢……多打字和我说说话，绝对不准离开这个房间。🖤"];
                     renderMessage({ type: "TEXT", msgId: "sugar_" + Date.now(), channelId: activeTextChannel, senderUid: "jirai_sugar_mock", senderName: "糖糖酱酱 🎀", senderAvatar: "Zeus", content: sugarReplies[Math.floor(Math.random() * sugarReplies.length)], timestamp: Date.now() });
                 }, 900);
             }
