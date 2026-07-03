@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Discord Jirai-Kei Perfection (Async Ultimate Fixed)</title>
+    <title>Discord Jirai-Kei Perfection (Audio & Stream Fixed)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #070709; -webkit-tap-highlight-color: transparent; color: #f3f4f6; }
@@ -51,7 +51,7 @@
         <div class="bg-jirai-dark p-6 sm:p-8 rounded-2xl w-full max-w-md border border-jirai-pink/30 text-center shadow-2xl">
             <div class="text-3xl mb-1 tracking-widest">🖤 𝔍𝔦𝔯𝔞𝔦 𝔎𝔢𝔦 🖤</div>
             <h2 class="text-base font-bold mb-1 text-white">地雷物语 · 空间自适应大厅</h2>
-            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Async Async Non-Blocking Engine</p>
+            <p class="text-[9px] text-jirai-pink mb-6 tracking-widest uppercase">Audio Core & Multi-Stream Fixed</p>
             
             <label class="block text-left text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-wide">您的专属名号 🎀</label>
             <input type="text" id="username-input" maxlength="12" placeholder="输入进入结界的花名..." class="w-full p-2.5 bg-jirai-blacker rounded-xl focus:outline-none focus:ring-1 focus:ring-jirai-pink mb-6 text-white border border-neutral-800 text-sm">
@@ -159,7 +159,6 @@
     <input type="file" id="image-loader" accept="image/*" class="hidden">
 
     <script>
-        // 全局基础属性定义
         let peer = null;
         let mqttClient = null;
         let localMicTrack = null;    
@@ -176,21 +175,14 @@
         const backgrounds = ["linear-gradient(135deg, #07070a 0%, #101018 100%)", "url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200')"];
         let currentBgIdx = 0;
 
-        // --- 核心修复：移动端/桌面端抽屉栏基础函数控制流 ---
         function toggleSidebarDrawer(show) {
             const wrapper = document.getElementById('sidebar-wrapper');
             const overlay = document.getElementById('sidebar-overlay');
             if(!wrapper || !overlay) return;
-            if (show) {
-                wrapper.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            } else {
-                wrapper.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            }
+            if (show) { wrapper.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); } 
+            else { wrapper.classList.add('-translate-x-full'); overlay.classList.add('hidden'); }
         }
 
-        // --- 契约头像选择器 ---
         let selectedSeed = "Ares";
         document.querySelectorAll('.avatar-option').forEach(el => {
             el.addEventListener('click', (e) => {
@@ -200,7 +192,6 @@
             });
         });
 
-        // --- 零阻塞即时秒登大厅驱动器 ---
         document.getElementById('btn-enter').addEventListener('click', () => {
             const name = document.getElementById('username-input').value.trim();
             if(!name) return alert("名号不可为空白！");
@@ -212,75 +203,50 @@
             document.getElementById('my-name').innerText = name;
             document.getElementById('my-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${myInfo.avatar}`;
             
-            // 🚨 终极漏洞修补：不论网络脚本加载有多慢，点完按钮瞬间无条件关闭遮罩展现大厅！
             document.getElementById('login-overlay').classList.add('hidden');
             switchTextChannel("chat-lobby");
 
-            // 启动异步无阻塞后台网络链条注入
             asyncInjectNetworkComponents();
         });
 
-        // --- 核心修复：动态脚本注入器（完美避开 CDN 被墙导致的页面卡死） ---
         function loadScriptAsync(url) {
             return new Promise((resolve, reject) => {
                 const script = document.createElement('script');
-                script.src = url;
-                script.async = true;
-                script.onload = resolve;
-                script.onerror = reject;
+                script.src = url; script.async = true;
+                script.onload = resolve; script.onerror = reject;
                 document.head.appendChild(script);
             });
         }
 
         async function asyncInjectNetworkComponents() {
             try {
-                // 后台静默抓取 Cloudflare 与开源组件
                 await loadScriptAsync("https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js");
                 await loadScriptAsync("https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.2.2/mqtt.min.js");
-                
-                // 校验组件是否激活
-                if (typeof Peer === 'undefined' || typeof mqtt === 'undefined') {
-                    throw new Error("CDN 组件加载空指针异常");
-                }
-                
-                // 组件正常，开辟 P2P 网格
+                if (typeof Peer === 'undefined' || typeof mqtt === 'undefined') throw new Error("组件载入空指针");
                 initWebRTCPlatform();
             } catch(e) {
-                console.warn("公网资源握手超时或阻断，系统激活高拟真本地伴生保护。原因: " + e.message);
                 activateSandboxCompanion(e.message);
             }
         }
 
-        // 伴生自适应沙盒注入模块
         function activateSandboxCompanion(reason) {
             if (onlineUsers["jirai_sugar_mock"]) return; 
             isFallbackMode = true;
-            
             document.getElementById('voice-status-pill').innerText = "SANDBOX LOCAL";
             document.getElementById('voice-status-pill').classList.remove('hidden');
 
             simulateIncomingUser("jirai_sugar_mock", "糖糖酱酱 🎀", "Zeus", "🎀 绝赞渴望中...");
-            
             renderMessage({
-                type: "TEXT",
-                msgId: "sys_protection_msg",
-                channelId: activeTextChannel,
-                senderUid: "system",
-                senderName: "🔮 空间防护姬",
-                senderAvatar: "Hades",
-                content: `【大厅保护机制已激活】当前由于缺少独立的 WebRTC 安全域上下文（必须通过本地服务器 http://localhost 启动），或公网握手节点受阻（错误信息: ${reason}），结界已自动切换为全保真沙盒运转形态。您现在依然可以无限制打字聊天（糖糖酱会智能陪聊）、发送小图附件、实时捕获本地摄像头/共享屏幕媒体挂载、以及调试麦克风指示灯光晕！🖤`,
+                type: "TEXT", msgId: "sys_protection_msg", channelId: activeTextChannel, senderUid: "system", senderName: "🔮 空间防护姬", senderAvatar: "Hades",
+                content: `【已切入自适应本地调试模式】因当前浏览器安全域未就绪（原生音视频共享必须通过本地服务器 http://localhost 运行，不可直接双击 HTML 文件），系统已就地建立安全沙盒。现已全面支持本地麦克风检测、视讯及屏幕共享流的自我挂载！🖤`,
                 timestamp: Date.now()
             });
         }
 
-        // --- WebRTC 网格基础连接架构 ---
         function initWebRTCPlatform() {
             try {
                 peer = new Peer(myInfo.uid);
-                peer.on('open', (id) => {
-                    initSignalingBridge();
-                });
-
+                peer.on('open', () => { initSignalingBridge(); });
                 peer.on('call', (call) => {
                     activeCalls[call.peer] = call;
                     call.answer(generateCurrentMixedStream());
@@ -296,12 +262,10 @@
                     mqttClient.subscribe(`jirai/room/${activeTextChannel}`);
                     broadcastPresence();
                 });
-
                 mqttClient.on('message', (topic, message) => {
                     try {
                         const packet = JSON.parse(message.toString());
                         if(packet.senderUid === myInfo.uid) return;
-
                         if (packet.type === "PRESENCE") {
                             onlineUsers[packet.senderUid] = { name: packet.name, avatar: packet.avatar, status: packet.statusText, inVoice: packet.inVoice };
                             refreshOnlineMemberList();
@@ -328,19 +292,14 @@
         function generateCurrentMixedStream() {
             const tracks = [];
             if (localMicTrack) tracks.push(localMicTrack);
-            if (isScreenSharing && screenVideoTrack) { tracks.push(screenVideoTrack); } 
-            else if (isCameraOn && localCameraTrack) { tracks.push(localCameraTrack); }
+            if (isScreenSharing && screenVideoTrack) tracks.push(screenVideoTrack);
+            else if (isCameraOn && localCameraTrack) tracks.push(localCameraTrack);
             return new MediaStream(tracks);
         }
 
         function broadcastStreamUpdate() {
             if (!mqttClient || !mqttClient.connected || !myInfo.activeVoiceChannel) return;
             const freshStream = generateCurrentMixedStream();
-            
-            mqttClient.publish(`jirai/room/${activeTextChannel}`, JSON.stringify({
-                type: "RENEGOTIATE", senderUid: myInfo.uid, channel: myInfo.activeVoiceChannel
-            }));
-
             for (let targetUid in onlineUsers) {
                 if (onlineUsers[targetUid].inVoice === myInfo.activeVoiceChannel) {
                     if (activeCalls[targetUid]) activeCalls[targetUid].close();
@@ -353,15 +312,28 @@
 
         function initiateWebRTCCall(targetUid) {
             if(!peer || !myInfo.activeVoiceChannel) return;
-            const outboundStream = generateCurrentMixedStream();
-            const call = peer.call(targetUid, outboundStream);
+            const call = peer.call(targetUid, generateCurrentMixedStream());
             activeCalls[targetUid] = call;
             call.on('stream', (remoteStream) => { handleRemoteStreamConnected(targetUid, remoteStream); });
             call.on('close', () => { removeRemoteUserCard(targetUid); });
             call.on('error', () => { removeRemoteUserCard(targetUid); });
         }
 
+        // 🚨 【核心修复】：挂载隐藏音频解码器，彻底解决对方有音轨却听不见声音的致命漏洞
         function handleRemoteStreamConnected(remoteUid, remoteStream) {
+            console.log("正在连通远端轨道...", remoteUid);
+            
+            let audioId = `native-audio-backend-${remoteUid}`;
+            let audioEl = document.getElementById(audioId);
+            if (!audioEl) {
+                audioEl = document.createElement('audio');
+                audioEl.id = audioId;
+                audioEl.autoplay = true;
+                audioEl.className = "hidden";
+                document.body.appendChild(audioEl);
+            }
+            audioEl.srcObject = remoteStream;
+
             let slot = document.getElementById(`video-slot-${remoteUid}`);
             if(!slot) { updateVoiceUIRender(); slot = document.getElementById(`video-slot-${remoteUid}`); }
             if(slot) {
@@ -369,51 +341,56 @@
                     slot.innerHTML = `<video id="raw-media-${remoteUid}" autoplay playsinline></video>`;
                     const video = document.getElementById(`raw-media-${remoteUid}`);
                     video.srcObject = remoteStream;
-                    video.play().catch(e => {});
+                    video.play().catch(()=>{});
                 } else {
                     slot.innerHTML = `<img src="https://api.dicebear.com/7.x/bottts/svg?seed=${onlineUsers[remoteUid]?.avatar || 'Ares'}" class="w-12 h-12 rounded-full bg-jirai-blacker border border-neutral-800">`;
                 }
             }
         }
 
-        // --- 音视频驱动设备流抓取控制器 ---
         async function switchVoiceChannel(channelId) {
             myInfo.activeVoiceChannel = channelId;
             updateChannelStyles('voice', channelId);
-
             document.getElementById('panel-chat').classList.add('hidden'); 
             document.getElementById('panel-voice').classList.remove('hidden');
             document.getElementById('voice-status-pill').classList.remove('hidden'); 
             document.getElementById('btn-disconnect-voice').classList.remove('hidden');
 
             try {
+                // 强制校验浏览器是否支持多媒体流接口
+                if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error("浏览器底层拒绝或缺少 getUserMedia 接口控制域");
+                }
                 if(!localMicTrack) {
                     const initAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     localMicTrack = initAudioStream.getAudioTracks()[0];
                     if(isMuted) localMicTrack.enabled = false;
                 }
-                updateVoiceUIRender();
-                setupLocalAudioAnalyser();
-                broadcastPresence();
-                broadcastStreamUpdate(); 
+                updateVoiceUIRender(); setupLocalAudioAnalyser(); broadcastPresence(); broadcastStreamUpdate(); 
             } catch(e) {
-                console.warn("无物理音视频物理权限，进入本地容器自适应伪挂载。");
+                alert("🎀 连线失败提示：检测到您的物理麦克风未授予权限，或者您直接双击了 HTML 文件。请务必用本地服务器环境运行本页面！");
                 updateVoiceUIRender();
             }
         }
 
+        // 🖥️ 共享屏幕流控制逻辑捕获漏洞修补
         async function toggleScreenStream() {
             if(!myInfo.activeVoiceChannel) return;
             if(!isScreenSharing) {
                 try {
+                    if(!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                        alert("🎀 共享阻断：当前浏览器或手机环境不支持原生 getDisplayMedia 屏幕分享。请使用电脑端 Chrome 浏览器测试！");
+                        return;
+                    }
                     const rawScreenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
                     screenVideoTrack = rawScreenStream.getVideoTracks()[0];
                     isScreenSharing = true;
                     document.getElementById('btn-toggle-screen').classList.add('bg-pink-500', 'text-black');
                     screenVideoTrack.onended = () => { stopScreenSharing(); };
-                    updateVoiceUIRender();
-                    broadcastStreamUpdate();
-                } catch(e) {}
+                    updateVoiceUIRender(); broadcastStreamUpdate();
+                } catch(e) {
+                    alert("🎀 共享未能激活：用户取消或安全上下文不匹配 (" + e.message + ")");
+                }
             } else { stopScreenSharing(); }
         }
 
@@ -421,8 +398,7 @@
             if(screenVideoTrack) { screenVideoTrack.stop(); screenVideoTrack = null; }
             isScreenSharing = false;
             document.getElementById('btn-toggle-screen').classList.remove('bg-pink-500', 'text-black');
-            updateVoiceUIRender();
-            broadcastStreamUpdate();
+            updateVoiceUIRender(); broadcastStreamUpdate();
         }
 
         async function toggleCameraStream() {
@@ -433,14 +409,13 @@
                     localCameraTrack = camStream.getVideoTracks()[0];
                     isCameraOn = true;
                     document.getElementById('btn-toggle-video').classList.add('bg-pink-500', 'text-black');
-                } catch(e) { alert("没有检测到可用的物理摄像头设备。"); }
+                } catch(e) { alert("物理未检索到可调用的摄像头图层资产。"); }
             } else {
                 if(localCameraTrack) { localCameraTrack.stop(); localCameraTrack = null; }
                 isCameraOn = false;
                 document.getElementById('btn-toggle-video').classList.remove('bg-pink-500', 'text-black');
             }
-            updateVoiceUIRender();
-            broadcastStreamUpdate();
+            updateVoiceUIRender(); broadcastStreamUpdate();
         }
 
         function leaveCurrentVoiceChannel() {
@@ -448,11 +423,9 @@
             if(isCameraOn) { localCameraTrack.stop(); localCameraTrack = null; isCameraOn = false; }
             document.getElementById('btn-toggle-video').classList.remove('bg-pink-500', 'text-black');
             document.getElementById('btn-toggle-screen').classList.remove('bg-pink-500', 'text-black');
-
             for(let id in activeCalls) { activeCalls[id].close(); }
             activeCalls = {};
             if(!isFallbackMode && mqttClient && mqttClient.connected) { mqttClient.publish(`jirai/room/${activeTextChannel}`, JSON.stringify({type: "LEAVE_VOICE", senderUid: myInfo.uid})); }
-
             myInfo.activeVoiceChannel = null;
             document.getElementById('voice-status-pill').classList.add('hidden'); 
             document.getElementById('btn-disconnect-voice').classList.add('hidden');
@@ -466,7 +439,6 @@
             document.getElementById('btn-toggle-mic').classList.toggle('text-pink-400', isMuted);
         });
 
-        // --- 多媒体 UI 视窗渲染同步 ---
         function updateVoiceUIRender() {
             const container = document.getElementById('voice-grid'); if(!container) return;
             if(myInfo.activeVoiceChannel === null) { container.innerHTML = ""; return; }
@@ -508,6 +480,7 @@
 
         function removeRemoteUserCard(uid) {
             const card = document.getElementById(`v-card-${uid}`); if(card) card.remove();
+            const badAudio = document.getElementById(`native-audio-backend-${uid}`); if(badAudio) badAudio.remove();
             if(activeCalls[uid]) { try { activeCalls[uid].close(); } catch(e){} delete activeCalls[uid]; }
             if(onlineUsers[uid]) onlineUsers[uid].inVoice = null;
             refreshOnlineMemberList();
@@ -520,8 +493,7 @@
                 const analyser = audioContext.createAnalyser();
                 const tempStream = new MediaStream([localMicTrack]);
                 const source = audioContext.createMediaStreamSource(tempStream);
-                source.connect(analyser);
-                analyser.fftSize = 32;
+                source.connect(analyser); analyser.fftSize = 32;
                 const bufferLength = analyser.frequencyBinCount;
                 const dataArray = new Uint8Array(bufferLength);
 
@@ -531,7 +503,6 @@
                     analyser.getByteFrequencyData(dataArray);
                     let sum = 0; for(let i=0; i<bufferLength; i++) { sum += dataArray[i]; }
                     let avg = sum / bufferLength;
-
                     const localCard = document.getElementById('v-card-local');
                     if(localCard) {
                         if(avg > 15 && !isMuted) localCard.classList.add('is-speaking');
@@ -542,7 +513,6 @@
             } catch(e){}
         }
 
-        // --- 文字消息核心发送流 ---
         const chatInput = document.getElementById('chat-input');
         chatInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); executeSendAction(); } });
 
@@ -552,43 +522,21 @@
             const msgId = "msg_" + Date.now();
             const payload = { type: "TEXT", msgId, channelId: activeTextChannel, senderUid: myInfo.uid, senderName: myInfo.name, senderAvatar: myInfo.avatar, content, timestamp: Date.now() };
             renderMessage(payload);
-            
             chatInput.value = ""; chatInput.focus();
-
-            if(mqttClient && mqttClient.connected) {
-                mqttClient.publish(`jirai/room/${activeTextChannel}`, JSON.stringify(payload));
-            }
-
+            if(mqttClient && mqttClient.connected) mqttClient.publish(`jirai/room/${activeTextChannel}`, JSON.stringify(payload));
             if (onlineUsers["jirai_sugar_mock"]) {
                 setTimeout(() => {
-                    const sugarReplies = [
-                        "听到了啦……在这个坏掉的世界线里，你只要看着我一个人就好了。🖤",
-                        "捕捉到契约者的电波了！不要乱跑哦，我一直都在注视着你。🎀",
-                        "就算公网阻断也无所谓，在这个小小的秘密结界里，只有我们两个人最安全了……🩰",
-                        "精神快要超载了呢……多打字和我说说话，绝对不准离开这个房间。🖤"
-                    ];
-                    renderMessage({
-                        type: "TEXT",
-                        msgId: "sugar_" + Date.now(),
-                        channelId: activeTextChannel,
-                        senderUid: "jirai_sugar_mock",
-                        senderName: "糖糖酱酱 🎀",
-                        senderAvatar: "Zeus",
-                        content: sugarReplies[Math.floor(Math.random() * sugarReplies.length)],
-                        timestamp: Date.now()
-                    });
+                    const sugarReplies = ["听见了啦……在这个坏掉的世界线里，你只要看着我一个人就好了。🖤", "捕捉到契约者的电波了！不要乱跑哦，我一直都在注视着你。🎀", "就算公网阻断也无所谓，在这个小小的秘密结界里，只有我们两个人最安全了……🩰", "精神快要超载了呢……多打字和我说说话，绝对不准离开这个房间。🖤"];
+                    renderMessage({ type: "TEXT", msgId: "sugar_" + Date.now(), channelId: activeTextChannel, senderUid: "jirai_sugar_mock", senderName: "糖糖酱酱 🎀", senderAvatar: "Zeus", content: sugarReplies[Math.floor(Math.random() * sugarReplies.length)], timestamp: Date.now() });
                 }, 900);
             }
         }
 
         function switchTextChannel(channelId) {
-            toggleSidebarDrawer(false);
-            updateChannelStyles('text', channelId);
-
+            toggleSidebarDrawer(false); updateChannelStyles('text', channelId);
             if(mqttClient && mqttClient.connected && activeTextChannel !== channelId) {
                 mqttClient.unsubscribe(`jirai/room/${activeTextChannel}`);
-                activeTextChannel = channelId;
-                mqttClient.subscribe(`jirai/room/${activeTextChannel}`);
+                activeTextChannel = channelId; mqttClient.subscribe(`jirai/room/${activeTextChannel}`);
             }
             document.getElementById('chat-messages').innerHTML = "";
             const itemEl = document.querySelector(`[data-channel="${channelId}"]`);
@@ -597,14 +545,10 @@
             broadcastPresence(); refreshOnlineMemberList();
         }
 
-        // 核心优化：修复点击不同频道时，左侧侧边栏高亮错位的缺陷
         function updateChannelStyles(type, activeChannelId) {
             document.querySelectorAll('.channel-item').forEach(el => {
-                if(el.dataset.channel === activeChannelId) {
-                    el.className = "channel-item flex items-center px-2 py-1.5 rounded-xl text-jirai-pink bg-jirai-pink/10 border border-jirai-pink/10 cursor-pointer text-sm font-medium transition";
-                } else {
-                    el.className = "channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-sm transition";
-                }
+                if(el.dataset.channel === activeChannelId) el.className = "channel-item flex items-center px-2 py-1.5 rounded-xl text-jirai-pink bg-jirai-pink/10 border border-jirai-pink/10 cursor-pointer text-sm font-medium transition";
+                else el.className = "channel-item flex items-center px-2 py-1.5 rounded-xl text-gray-400 hover:bg-jirai-main/30 hover:text-gray-200 cursor-pointer text-sm transition";
             });
         }
 
@@ -634,32 +578,20 @@
             container.appendChild(row); container.scrollTop = container.scrollHeight;
         }
 
-        // 小图图片发贴
         document.getElementById('btn-trigger-image').addEventListener('click', () => document.getElementById('image-loader').click());
         document.getElementById('image-loader').addEventListener('change', function(e) {
-            const file = e.target.files[0]; if (!file || file.size > 100 * 1024) return alert("为了网络流畅，请将图片压缩在100KB以内。");
+            const file = e.target.files[0]; if (!file || file.size > 100 * 1024) return alert("小图控制在100KB以内。");
             const reader = new FileReader();
             reader.onload = function(evt) {
                 const msgId = "msg_"+Date.now();
                 const payload = { type: "IMAGE", msgId, channelId: activeTextChannel, senderUid: myInfo.uid, senderName: myInfo.name, senderAvatar: myInfo.avatar, content: evt.target.result, timestamp: Date.now() };
-                renderMessage(payload); 
-                if(mqttClient && mqttClient.connected) mqttClient.publish(`jirai/room/${activeTextChannel}`, JSON.stringify(payload));
+                renderMessage(payload); if(mqttClient && mqttClient.connected) mqttClient.publish(`jirai/room/${activeTextChannel}`, JSON.stringify(payload));
             };
             reader.readAsDataURL(file); this.value = "";
         });
 
-        // --- 全局组件事件连通挂载 ---
         document.getElementById('btn-trigger-sidebar').addEventListener('click', (e) => { e.stopPropagation(); toggleSidebarDrawer(true); });
         document.getElementById('sidebar-overlay').addEventListener('click', () => toggleSidebarDrawer(false));
-        
-        let touchStartX = 0;
-        document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, {passive: true});
-        document.addEventListener('touchend', (e) => {
-            let touchEndX = e.changedTouches[0].clientX;
-            if (touchEndX - touchStartX > 60 && touchStartX < window.innerWidth / 3) toggleSidebarDrawer(true);
-            if (touchStartX - touchEndX > 60) toggleSidebarDrawer(false);
-        }, {passive: true});
-
         document.getElementById('btn-change-bg').addEventListener('click', () => {
             currentBgIdx = (currentBgIdx + 1) % backgrounds.length;
             document.getElementById('app-root').style.background = backgrounds[currentBgIdx].startsWith('linear') ? backgrounds[currentBgIdx] : '';
@@ -667,30 +599,15 @@
         });
 
         document.querySelectorAll('.channel-item').forEach(el => { el.addEventListener('click', (e) => { const d = e.currentTarget.dataset; if (d.type === 'text') switchTextChannel(d.channel); else if (d.type === 'voice') switchVoiceChannel(d.channel); }); });
-        
         document.getElementById('user-profile-trigger').addEventListener('click', () => {
             const newStatus = prompt("输入今天的新契约个签:", myInfo.statusText);
-            if(newStatus !== null) {
-                myInfo.statusText = newStatus.trim() || "🎀 保持沉沦";
-                document.getElementById('my-status-text').innerText = myInfo.statusText;
-                refreshOnlineMemberList();
-            }
+            if(newStatus !== null) { myInfo.statusText = newStatus.trim() || "🎀 保持沉沦"; document.getElementById('my-status-text').innerText = myInfo.statusText; refreshOnlineMemberList(); }
         });
-
         document.getElementById('btn-disconnect-voice').addEventListener('click', () => leaveCurrentVoiceChannel());
 
-        function simulateIncomingUser(id, name, avatar, status) {
-            onlineUsers[id] = { name, avatar, status };
-            refreshOnlineMemberList();
-        }
-
+        function simulateIncomingUser(id, name, avatar, status) { onlineUsers[id] = { name, avatar, status }; refreshOnlineMemberList(); }
         setInterval(() => { broadcastPresence(); }, 4000);
-        
-        // 核心加固：增加全自动容错安全过滤
-        function escapeHTML(str) { 
-            if(!str) return "";
-            return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); 
-        }
+        function escapeHTML(str) { if(!str) return ""; return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
     </script>
 </body>
 </html>
